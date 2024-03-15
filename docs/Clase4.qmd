@@ -1,183 +1,327 @@
 ---
-title: "Clase 4: Estimadores de abundancia parte 2, usando distance"
+title: "Clase 4: Pruebas no-parametricas"
 format: html
 editor: visual
 ---
 
+Las pruebas no paramétricas son un conjunto de técnicas de prueba estadística que se utilizan para evaluar hipótesis sobre una población cuando no se tienen suficientes datos para suponer una distribución particular de los datos. A diferencia de las pruebas paramétricas, que asumen una distribución particular de los datos (como la distribución normal), las pruebas no paramétricas no requieren ninguna suposición sobre la distribución de los datos.
+
+Algunas pruebas no paramétricas comunes incluyen:
+
+- Prueba de Wilcoxon: se utiliza para comparar dos grupos de datos ordenados y se utiliza a menudo cuando los datos no siguen una distribución normal.
+
+- Prueba de Kruskal-Wallis: se utiliza para comparar más de dos grupos de datos ordenados y se utiliza a menudo cuando los datos no siguen una distribución normal.
+
+- Prueba de Mann-Whitney: se utiliza para comparar dos grupos de datos no ordenados y se utiliza a menudo cuando los datos no siguen una distribución normal.
+
+- Prueba de chi-cuadrado: se utiliza para comparar una distribución observada de datos con una distribución esperada y se utiliza a menudo para comparar datos categóricos.
+
+Es importante tener en cuenta que las pruebas no paramétricas suelen ser menos robustas (es decir, tienen menor capacidad para detectar diferencias significativas) que las pruebas paramétricas, por lo que es importante elegir la prueba adecuada para su conjunto de datos y objetivo de investigación.
+
+## Pruebas no parametricas
+
 ::: panel-tabset
-## Conteo por puntos
 
-Los conteos por puntos son una técnica comúnmente utilizada en ecología y biología para estimar la abundancia de organismos en un área determinada. En este método, se seleccionan puntos de muestreo dentro del área de estudio y se registra el número de individuos de la especie de interés que se encuentran en cada punto durante un período de tiempo específico. Estos conteos pueden realizarse de manera visual o auditiva, según la especie y las condiciones del entorno. Posteriormente, los datos recopilados se utilizan para calcular una estimación de la densidad o abundancia total de la población en el área de estudio, mediante técnicas estadísticas como extrapolación o interpolación. Los conteos por puntos son una herramienta valiosa para monitorear poblaciones y comprender la distribución espacial de los organismos en su hábitat.
+### Prueba de Wilcoxon
 
-Para estimar la abundancia utilizamos la siguiente formula:
+La prueba de Wilcoxon es una prueba no paramétrica utilizada para comparar dos grupos de datos ordenados y se utiliza a menudo cuando los datos no siguen una distribución normal. Esta prueba es similar a la prueba t de Student, que es una prueba paramétrica utilizada para comparar dos grupos de datos, pero la prueba de Wilcoxon no requiere que los datos sigan una distribución normal.
 
-$$N = \frac{A{\sum x_i}}{n \pi r^2}$$
 
-Donde:
+**Ejemplo de prueba Wilcoxon**
 
-*N* = Abundancia de la población *A* = Área *x* = Número de aves observadas *n* = Total de puntos de conteo *r* = Radio del punto de conteo
 
-Ejercicio
+Primero necesitamos cargar la base de datos, en este caso utlizaremos `delomys.csv`
 
-> Se llevó a cabo un estudio para estimar la abundancia de aves mediante 10 conteos por punto, cada uno con un radio fijo de 50 metros. El estudio se realizó en un área de 2 kilómetros cuadrados y se avistaron en total 50 individuos.
+```{r, echo=FALSE, include=FALSE}
 
-```{r}
-AbundanciaConteo <- function(A, x, n, r){
-  N = (A*sum(x)) / (n*3.1416*r^2)
-  print(N)
-}
+library(here)
 
-A= 2
-x= 50
-n= 10
-r= 0.050
-
-AbundanciaConteo(A=A, x=x, n=n, r=r)
+Delomys <- read.csv("data/delomys.csv")
 ```
 
-## Distance
 
-Estimar la abundancia y distribución espacial de poblaciones animales y vegetales es esencial para la conservación y gestión. El paquete R *Distance* implementa métodos de muestreo de distancia para estimar la abundancia.
+```{r, eval=FALSE}
 
-"Describimos cómo los usuarios pueden obtener estimaciones de abundancia (y densidad) utilizando el paquete, así como documentando los enlaces que proporciona con otros paquetes R más especializados. También demostramos cómo Distance proporciona una vía de migración desde software anterior, lo que nos permite ofrecer métodos de vanguardia a los usuarios más rápidamente". <https://www.jstatsoft.org/article/view/v089i01>
+Delomys <- read.csv("data/delomys.csv")
+```
 
-```{r, warning=FALSE, message=FALSE}
-library(Distance)
+Ahora podemos realizar la prueba con el comando `wilcox.test()`
+
+```{r}
+wilcox.test(body_mass ~ sex, data= Delomys, alternative = "two.sided")
+```
+
+### Prueba de Mann-Whitney
+
+La prueba de Mann-Whitney es una prueba no paramétrica utilizada para comparar dos grupos de datos no ordenados y se utiliza a menudo cuando los datos no siguen una distribución normal. Esta prueba es similar a la prueba t de Student, que es una prueba paramétrica utilizada para comparar dos grupos de datos, pero la prueba de Mann-Whitney no requiere que los datos sigan una distribución normal.
+
+Es importante tener en cuenta que la prueba de Mann-Whitney solo puede utilizarse para comparar dos grupos de datos y no es adecuada para comparar más de dos grupos. En su lugar, se puede utilizar la prueba de Kruskal-Wallis para comparar más de dos grupos de datos ordenados o la prueba de chi-cuadrado para comparar más de dos grupos de datos categóricos.
+
+
+**Ejemplo de la prueba Mann-Whitney**
+
+
+Para realizar la prueba de Mann-Whitney en R, puedes utilizar la función wilcox.test() con el argumento alternative = "two.sided". La sintaxis para la función wilcox.test() es la siguiente:
+
+
+```{r}
+wilcox.test(body_mass ~ sex, data= Delomys, alternative = "two.sided")
+```
+
+
+La prueba de Wilcoxon y la prueba de Mann-Whitney son ambas pruebas no paramétricas utilizadas para comparar dos grupos de datos, pero hay algunas diferencias clave entre ellas. En la prueba de Wilcoxon se utiliza para comparar dos grupos de datos ordenados mientras que la prueba de Mann-Whitney se utiliza para comparar dos grupos de datos no ordenados.
+
+
+### Prueba de Kruskal-Wallis
+
+
+La prueba de Kruskal-Wallis es una prueba no paramétrica utilizada para comparar más de dos grupos de datos ordenados y se utiliza a menudo cuando los datos no siguen una distribución normal. Esta prueba es similar a la prueba ANOVA, que es una prueba paramétrica utilizada para comparar más de dos grupos de datos, pero la prueba de Kruskal-Wallis no requiere que los datos sigan una distribución normal.
+
+**Ejemplo de prueba Kruskal-wallis**
+
+
+Para este ejemplo utilizaremos la base de datos `penguins` del paquete `palmerpenguins`
+
+```{r}
+library(palmerpenguins)
+data(peguins)
+```
+
+Utilizares la prueba de Kruskal-wallis para comparar la masa del cuerpo de los pinguinos por especie.
+
+```{r}
+kruskal.test(body_mass_g ~ species, data= penguins)
+```
+
+Como se puedo observar el resultado indica que hay diferencias significativas de la masa del cuerpo por especie de pinguino, ahora necesitaremos realizar una prueba de contraste. En este caso utilizaremos la prueba Dunn.
+
+
+La prueba de Dunn es una prueba no paramétrica utilizada para comparar más de dos grupos de datos ordenados. Esta prueba se utiliza a menudo después de realizar una prueba de Kruskal-Wallis, que es otra prueba no paramétrica utilizada para comparar más de dos grupos de datos ordenados, cuando se ha encontrado una diferencia significativa entre al menos dos de los grupos.
+
+
+```{r}
+library(FSA)
+
+dunnTest(body_mass_g ~ species, data= penguins)
+
 
 ```
 
-## Minke whales
+###  Prueba de chi-cuadrado
 
-Los datos de transecto lineal han sido simulados a partir de modelos ajustados a datos de la ballena minke antártica (Balaenoptera bonaerensis). Estos datos fueron recolectados como parte del programa Investigación sobre Ballenas y Ecosistemas del Océano Austral (IWC IDCR-SOWER) de la Comisión Ballenera Internacional durante las encuestas de verano austral de 1992-1993. Los datos consisten en 99 observaciones en 25 transectos, los cuales fueron estratificados según la ubicación (cerca o lejos del borde de hielo) y los datos de esfuerzo (longitudes de transecto). Más detalles sobre la encuesta están disponibles en Branch y Butterworth (2001) (los datos son simulados según el diseño utilizado para "Área III 1992/93" en dicho estudio).
+La prueba de chi cuadrado es una prueba estadística utilizada para comparar dos o más grupos de datos categóricos. Esta prueba se basa en la hipótesis nula de que no hay diferencias significativas entre los grupos y se utiliza para determinar si hay una asociación entre las variables categóricas.
+
+Para realizar una prueba de chi cuadrado, se crea una tabla de contingencia que muestra la frecuencia de cada combinación de categorías entre las dos variables. 
+
+**Ejemplo Chi Cuadrado**
+
+Para este ejemplo utilizares la base de datos `Delomys`, analisaremos si existe una asiciacion entre la variable `status` y `age`.
+
+- Primero creamos nuestra tabla de contingencia
 
 ```{r}
-data("minke")
-head(minke)
+TablaCon <- table(Delomys$status, Delomys$age)
+TablaCon
 ```
 
-Detection functions
-
-> La detectabilidad en conteos por puntos se refiere a la probabilidad de detectar un organismo presente en un punto de muestreo durante un período de observación determinado. Esta detectabilidad puede variar según diversas condiciones, como el comportamiento del organismo, la estacionalidad, el hábitat y las habilidades del observador. Comprender y estimar la detectabilidad es crucial para obtener estimaciones precisas de la abundancia de una especie utilizando conteos por puntos, ya que afecta directamente a la eficacia del método de muestreo y a la interpretación de los datos recopilados. Se pueden emplear diversas técnicas y modelos estadísticos para estimar la detectabilidad y corregir los sesgos que pueda introducir en las estimaciones de abundancia.
+- Ahora podemos realizar la prueba de Chi Cuadrado
 
 ```{r}
-minke_hn <- ds(minke, truncation = 1.5)
+chisq.test(TablaCon)
 ```
 
-```{r}
-plot(minke_hn)
+- Visualizaremos nuestra relacion utilizando grafico de barra
+
+```{r, fig.align='center'}
+
+barplot(TablaCon,
+        main = "Gráfico de chi cuadrado", 
+        xlab = "Edad", 
+        ylab = "Estado")
 ```
 
-hazard rate model can be fitted as:
+- Una visualizacion mas adecuada
 
 ```{r}
-minke_hrcos <- ds(minke, truncation = 1.5, key = "hr")
-plot(minke_hrcos)
+library(vcd)
+mosaic(~ status + age, data = Delomys, shade = T)
 ```
 
-```{r}
-summary(minke_hrcos)
-```
+###  Graficos
 
-> Otras series de ajuste pueden ser seleccionadas utilizando el argumento de ajuste y se pueden establecer órdenes específicos de ajustes utilizando el argumento order. Por ejemplo, para especificar un modelo uniforme con ajustes coseno de orden 1 y 2, podemos escribir:
+::: panel-tabset
 
-```{r}
-minke_unifcos <- ds(minke, truncation = 1.5, key = "unif", adjustment = "cos", order = c(1, 2))
-plot(minke_unifcos)
+Hay varios tipos de gráficos que se pueden utilizar para mostrar diferencias significativas entre dos o más grupos de datos. Algunos de los gráficos más comunes que se utilizan para este propósito son:
 
-```
+- Gráfico de barras: Este gráfico muestra la frecuencia o el promedio de cada grupo en forma de barras verticales o horizontal. Es adecuado para comparar dos o más grupos de datos numéricos o categóricos.
 
-```{r}
-summary(minke_unifcos)
-```
+- Gráfico de líneas: Este gráfico muestra el cambio en una variable a lo largo del tiempo o en función de otra variable. Es adecuado para comparar dos o más grupos de datos numéricos que tienen un orden natural.
 
-## Amakihi
+- Gráfico de puntos: Este gráfico muestra los valores individuales de cada grupo como puntos en un eje coordenado. Es adecuado para comparar dos o más grupos de datos numéricos.
 
-```{r}
-data("amakihi")
-head(amakihi)
-```
+- Gráfico de cajas: Este gráfico muestra la distribución de los datos de cada grupo mediante el uso de una caja que representa el rango intercuartil y dos bigotes que representan el resto de los datos. Es adecuado para comparar dos o más grupos de datos numéricos.
 
-El conjunto de datos de transectos de puntos consiste en 1485 observaciones de Amakihi (Hemignathus virens; un pájaro cantor hawaiano), recolectadas en 41 puntos entre 1992 y 1995. Los datos incluyen distancias y dos covariables recolectadas durante la encuesta: observador (un factor de tres niveles) y tiempo después del amanecer (transformado a minutos (continuo) o horas (factor)). Los datos son analizados de manera exhaustiva en Marques et al. (2007).
+Es importante tener en cuenta que cada gráfico tiene sus propias ventajas y desventajas y que es importante elegir el gráfico adecuado en función de los datos y el mensaje que se desea transmitir.
 
-```{r}
-amakihi_hr_obs <- ds(amakihi, truncation = 82.5, transect = "point", key = "hr", formula = ~ OBs)
+Para todos los ejemplo a continuacion utilizaremos el paquete `ggplot2` y la base de datos `penguins`
 
-amakihi_hr_obs_mas <- ds(amakihi, truncation = 82.5, transect = "point", key = "hr", formula = ~OBs + MAS)
-```
+#### Grafico de barra
 
-```{r}
-plot(amakihi_hr_obs)
-```
+Para realizar nuetro grafico podemos usar la siguiente sintaxis
 
-```{r}
-summary(amakihi_hr_obs)
-```
+**Primer ejemplo Sexo por Masa**
 
-## Goodness of fit
 
-La bondad de ajuste (goodness of fit en inglés) es una medida que evalúa qué tan bien un modelo teórico se ajusta a los datos observados. En otras palabras, indica qué tan bien los valores predichos por el modelo se aproximan a los valores reales observados en los datos. La bondad de ajuste es fundamental en el análisis estadístico y en la validación de modelos, ya que permite determinar si un modelo proporciona una descripción adecuada y precisa de los datos observados. Se utilizan diferentes estadísticos y pruebas para evaluar la bondad de ajuste en función de la naturaleza de los datos y del modelo en cuestión. Una buena bondad de ajuste indica que el modelo es adecuado para los datos, mientras que una mala bondad de ajuste sugiere que el modelo puede requerir modificaciones o que otro modelo podría ser más apropiado.
+```{r, fig.align='center'}
+library(ggplot2)
 
-```{r}
-amakihi_hn <- ds(amakihi, truncation = 82.5, transect = "point", key = "hn", adjustment = NULL)
-```
-
-```{r}
-gof_ds(amakihi_hn)
-gof_ds(amakihi_hr_obs)
-```
-
-## Model selection
-
-El AIC, o Criterio de Información de Akaike por sus siglas en inglés (Akaike Information Criterion), es una herramienta ampliamente utilizada en estadística para la selección de modelos. Su objetivo es encontrar el modelo que mejor balancee el ajuste a los datos y la complejidad del modelo. En resumen, el AIC penaliza la complejidad del modelo, premiando modelos que se ajustan bien a los datos con el menor número de parámetros.
-
-La idea central es comparar diferentes modelos y seleccionar aquel que tenga el valor más bajo de AIC. Cuando se comparan modelos, un valor de AIC menor indica un mejor compromiso entre ajuste y complejidad. Es importante tener en cuenta que el AIC no proporciona una medida absoluta de la bondad de ajuste, sino que se utiliza principalmente para comparar modelos entre sí.
-
-En la práctica, se calcula el AIC para cada modelo ajustado a los datos y se selecciona el modelo con el valor más bajo de AIC como el más adecuado para describir los datos. Esta técnica de selección de modelos con AIC es ampliamente utilizada en diversas disciplinas, incluyendo la econometría, la biología, la ecología y la ingeniería, entre
-
-```{r}
-summarize_ds_models(amakihi_hn, amakihi_hr_obs, amakihi_hr_obs_mas)
-```
-
-> Resumen de los modelos de función de detección ajustados a los datos de amakihi. "CvM" significa Cramér-von Mises, Pa es la detectabilidad promedio (consulte "Estimación de la abundancia y la varianza"), se es el error estándar. Los modelos están ordenados según el AIC.
-
-## Estimación de la abundancia y la varianza
-
-Regresando a los datos de ballena minke, tenemos la información necesaria para calcular A y a como se mencionó anteriormente, por lo que podemos estimar la abundancia y su varianza. Cuando proporcionamos datos a ds en el formato "flatfile" dado anteriormente, ds calculará automáticamente las estimaciones de abundancia basadas en la información de la encuesta en los datos. Habiendo ajustado previamente un modelo a los datos de ballena minke, podemos ver los resultados de la estimación de la abundancia al visualizar el resumen del modelo:
-
-```{r}
-summary(minke_hn)
-```
-
--   Estadísticas resumidas: proporcionando las áreas, áreas cubiertas, esfuerzo, número de observaciones, número de transectos, tasa de encuentro, su error estándar y coeficiente de variación para cada estrato.
-
--   Abundancia: proporcionando estimaciones, errores estándar, coeficientes de variación, intervalos de confianza inferiores y superiores, y finalmente los grados de libertad para la estimación de abundancia de cada estrato.
-
--   Densidad: lista las mismas estadísticas que Abundancia pero para una estimación de densidad.
-
-```{r}
-minke_table <- summary(minke_hn)$dht$individuals$N
-minke_table$lcl <- minke_table$ucl <- minke_table$df <- NULL
-colnames(minke_table) <- c("Stratum", "Abundancia", "ES", "CV")
-
-minke_table$n <- c(54, 45, 54+45)
-minke_table$IC95 <- 1.96 * minke_table$ES/sqrt(n)
-```
-
-```{r}
-minke_table
-```
-
-## Representacion grafica de los resultados
-
-```{r}
-library(tidyverse)
-
-ggplot(data= minke_table, aes(x= Stratum, y= Abundancia))+
-  geom_col()+
-  geom_errorbar(aes(ymin= Abundancia -IC95,
-                    ymax= Abundancia + IC95))+
+ggplot(data= penguins, aes(x= sex, y = body_mass_g)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Masa da cuerpo por sexo en pinguinos",
+       y= "Masa en gramos",
+       x= "Sexo")+
   theme_classic()
 ```
+
+Que se observa con este grafico? 
+
+Sera apropiado para visualizar una comparacion?
+
+
+**Segundo ejemplo Sexo por Masa**
+
+
+Primero necesitaremos organizar nuestros datos para obtener la media y error estandard
+
+```{r}
+library(FSA)
+
+Sex_body <- Summarize(body_mass_g ~ sex, data= penguins)
+
+Sex_body$ES <- Sex_body$sd / sqrt(Sex_body$n)
+```
+
+Una vez que tenemos nuestra tabla podemos graficar
+
+```{r, fig.align='center'}
+
+ggplot(data= Sex_body, aes(x= sex, y = mean)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin= mean - ES,
+                    ymax= mean + ES)) +
+  labs(title = "Masa da cuerpo por sexo en pinguinos",
+       y= "Masa en gramos",
+       x= "Sexo")+
+  theme_classic()
+```
+
+Que se observa con este grafico? 
+
+Sera apropiado para visualizar una comparacion?
+
+
+#### Grafico de caja modificado
+
+Para realizar un grafico de caja normal usamos la siguiente sintaxis
+
+**Primer ejemplo Sexo por Masa**
+
+```{r, fig.align='center'}
+
+ggplot(data= penguins, aes(x= sex, y = body_mass_g)) +
+  geom_boxplot() +
+  labs(title = "Masa da cuerpo por sexo en pinguinos",
+       y= "Masa en gramos",
+       x= "Sexo")+
+  theme_classic()
+```
+
+Que se observa con este grafico? 
+
+Sera apropiado para visualizar una comparacion?
+
+
+
+
+**Segundo ejemplo Sexo por Masa**
+
+Primero necesitaremos organizar nuestros datos para obtener la media y error estandard
+
+```{r}
+library(FSA)
+
+Sex_body <- Summarize(body_mass_g ~ sex, data= penguins)
+
+Sex_body$ES <- Sex_body$sd / sqrt(Sex_body$n)
+```
+
+Una vez que tenemos nuestra tabla podemos graficar
+
+```{r, fig.align='center'}
+
+ggplot(data= Sex_body, aes(x= sex, y = mean)) +
+  geom_point(size= 5, shape = 15) +
+  geom_errorbar(aes(ymin= mean - ES,
+                    ymax= mean + ES),
+                width = 0.5) +
+  labs(title = "Masa da cuerpo por sexo en pinguinos",
+       y= "Masa en gramos",
+       x= "Sexo")+
+  theme_classic()
+```
+
+Que se observa con este grafico? 
+
+Sera apropiado para visualizar una comparacion?
+
+**Tercer ejemplo Especie por Masa**
+
+
+```{r, fig.align='center'}
+
+ggplot(data= penguins, aes(x= species, y = body_mass_g)) +
+  geom_boxplot() +
+  labs(title = "Masa da cuerpo por especie en pinguinos",
+       y= "Masa en gramos",
+       x= "Especie")+
+  annotate("text", x = "Adelie", y = 5000, label = "a")+
+  annotate("text", x = "Chinstrap", y = 5000, label = "a")+
+  annotate("text", x = "Gentoo", y = 6500, label = "a")+
+  theme_classic()
+```
+
+
+
+**Cuarto ejemplo Especie por Masa**
+
+Primero necesitaremos organizar nuestros datos para obtener la media y error estandard
+
+```{r}
+Especie_body <- Summarize(body_mass_g ~ species, data= penguins)
+
+Especie_body$ES <- Sex_body$sd / sqrt(Especie_body$n)
+```
+
+Una vez que tenemos nuestra tabla podemos graficar
+
+```{r, fig.align='center'}
+
+ggplot(data= Especie_body, aes(x= species, y = mean)) +
+   geom_point(size= 5, shape = 15) +
+   geom_errorbar(aes(ymin= mean - ES,
+                    ymax= mean + ES),
+                width = 0.5) +
+  labs(title = "Masa da cuerpo por especie en pinguinos",
+       y= "Masa en gramos",
+       x= "Especie")+
+  annotate("text", x = "Adelie", y = 4000, label = "a")+
+  annotate("text", x = "Chinstrap", y = 4000, label = "a")+
+  annotate("text", x = "Gentoo", y = 5200, label = "b")+
+  theme_classic()
+```
+
+:::
+
 :::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)

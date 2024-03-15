@@ -1,156 +1,142 @@
-
 ---
 title: "Clase 3: Regulación de Poblaciones y Estimadores de abundancia"
 format: html
 editor: visual
 ---
 
-### Regulación de Poblaciones
+::: panel-tabset
 
--   Efecto de aglomeración (crowding).
--   Tipos de dependencia de la densidad.
+## Distribucion Normal
 
-### Estimación del tamaño poblacional mediante el método de captura-recaptura.
+La distribución normal es una distribución de probabilidad continuamente distribuida que se utiliza comúnmente en el análisis de datos. Esta distribución es symmetric (simétrica) y tiene una forma de campana, con un pico en el centro y una cola que se extiende hacia los valores extremos.
 
+Para los ejercicios de esta clase utilizaremos la base de datos `delomys.csv`
 
-Examinaremos los estimadores de tamaño poblacional mediante el método de captura-recaptura:
+```{r, eval=FALSE}
 
-$$\hat{N} = \frac{n_1 \times n_2}{m}$$
+delomys <- read.csv("data/delomys.csv")
+```
 
+```{r, echo=FALSE}
 
+library(here)
+library(knitr)
 
-### Estimación de la Densidad y abundancia
-
-**Abundancia absoluta**: Cantidad total de individuos.
-
-**Abundancia relativa**: Número de individuos de una población en un lugar y periodo de tiempo, en relación con el número de individuos en diferentes lugares o momentos.
-
-**Densidad de la población**: Número de individuos por unidad de área.
-
-## Conteo en franjas
-
-Es uno de los métodos más utilizados para estimar la densidad, utilizando franjas o transectos como unidades de conteo. El método clásico implica asignar el 0.5 del ancho de la franja a cada lado del transecto lineal, y solo se consideran los organismos observados dentro de este ancho predefinido.
-
-$$D = \frac{\sum x}{\sum a}$$
-Donde: 
-
-x = Numeros de individous observados
-
-a = area de cada franja (L X 2w)
-
-ejemplo 1: 
+delomys <- read.csv("data/delomys.csv")
+```
 
 ```{r}
-# Crear datos de muestra
-x <- c(10, 15, 20, 25, 30)  # valores de x
-a <- c(5000, 5000, 4700, 5300)       # valores de a
-
-Den1 <- function(x, a) {
-  D <- sum(x) / sum(a)
-  cat(D, "inv/metro cuadrado")
-}
-
-Den1(x = x, a = a)
+kable(head(delomys))
 ```
-Para obtener el tamano poblacion a partir de la densidad utilizaremos:
 
-$$N = DA$$
-Donde:
-N = Tamano de la poblacion
-A = area de interferencia (area de estudio) 
+Como se puede observar la base de datos `delomys` presenta varias variables, si queremos sabe si alguna variable en especifico presenta distribucion normal pode utilizar la prueba de shapiro o realizar un grafico cuartil-cuartil.
 
-Ejemplo 2
+**Prueba de shapiro **
+
+Es importante tener en cuenta que la prueba de normalidad de Shapiro no es infalible y puede dar resultados incorrectos si el tamaño de la muestra es pequeño. Por lo general, se recomienda un tamaño de muestra de al menos 30 para utilizar la prueba de normalidad de Shapiro de manera fiable. Además, la prueba de normalidad de Shapiro puede ser sensible a los valores extremos o anómalos en los datos, por lo que puede ser necesario eliminar estos valores antes de realizar la prueba.
 
 ```{r}
-N = 0.005 * 100000
-N
+shapiro.test(delomys$body_mass)
 ```
-Combinando las dos formulas obtenemos el estimador de abundacia simple para conteo por franjas
+Un gráfico de cuartil-cuartil, también conocido como gráfico Q-Q, es una herramienta gráfica utilizada para evaluar si un conjunto de datos sigue una distribución específica. En el caso de una distribución normal, se esperaría que los datos se ajusten a una línea recta en el gráfico.
 
-$$N = A\frac{\sum x}{2Lwn_s}$$
-Donde:
-$$n_s$$ = Numero de franjas
+```{r, fig.align='center'}
 
-La desvianza se obtiene con la formula:
+library(car)
 
-$$s^2_x = {\sum x^2 -} \frac{(\sum x)^2}{n_s} / {n_s - 1}$$ ->
+qqPlot(delomys$body_mass)
 
-$$s^2_N = {{((n_t)^2}/n_s)} * {s^2_x}{(1 - n_s / n_t)}$$
+```
 
-El error estandar se estima con:
-
-$$SE_x = \sqrt(s^2_x/n_s)$$ =
-
-$$SE_N = \sqrt(s^2_N)$$
+Es importante tener en cuenta que el gráfico de cuartil-cuartil es solo una herramienta visual y no proporciona una medida cuantitativa de la normalidad de los datos. Para obtener una medida cuantitativa, se puede utilizar una prueba estadística como la prueba de normalidad de Shapiro.
 
 
-Finalmente los Intervalos de confianza al 95% se estiman con;
 
-$$CI = N \pm t_{\alpha, df}(SE_N)$$
 
-Ejercicio 3
 
-Con el objetivo de estimar el número de aves en una área de estudio de 2 km cuadrados, hemos implementado un muestreo mediante 5 transectos con franjas. Cada transecto tiene una longitud de 100 metros y cada franja tiene un ancho de 10 metros.
+## Análisis de varianza
 
-Los resultados de nuestro conteo indican que se observaron un total de 15 aves, distribuidas de la siguiente manera: 4, 3, 3, 2 y 3 en cada uno de los transectos. El total del possible numero de muestreos es de 1000 (nt = A/a)
+El análisis de varianza (ANOVA) es una técnica estadística que se utiliza para evaluar si hay diferencias significativas entre dos o más grupos en una variable. Se utiliza comúnmente para comparar los resultados de diferentes tratamientos o grupos de estudio en un experimento.
 
-Para abordar este ejercicio, se busca calcular la estimación del tamaño de la población, la varianza, el error estándar y los intervalos de confianza al 95%.
+
+::: panel-tabset
+
+### ANOVA de una vía 
+
+El análisis de varianza (ANOVA) de una vía es una técnica estadística utilizada para evaluar si hay diferencias significativas entre dos o más grupos en una sola variable. El ANOVA de una vía se utiliza cuando se tienen dos o más grupos y se quiere evaluar si hay diferencias significativas en una sola medida o variable.
 
 
 ```{r}
-Abundancia <- function(A, x, L, w, ns){
-  N = (A * sum(x))/ (2*L*w*ns)
-  print(N)
-}
+table(delomys$status)
 
-x = c(4,3,3,2,3)
-A = 2
-L = 0.1
-w = 0.01
-ns = 5
+ANOVA_status <- aov(body_mass ~ status, data= delomys)
+summary(ANOVA_status)
 
-Abundancia(x =x, A =A, L= L, w=w, ns= ns)
-
-Varianza1 <- function(x, ns ){
-  s2x = (sum(x^2) - (sum(x)^2/ns)) / (ns -1)
-  print(s2x)
-}
-
-s2x <- Varianza1(x= x, ns= ns)
-s2x
-
-Varianza <- function(nt, ns, s2x){
-  s = (nt^2/ns) * s2x 
-  print(s)
-}
-
-nt= 1000
-
-Varianza(nt = nt, ns = ns, s2x = s2x )
-
-ES <- function(Varianza){
-  ES = sqrt(Varianza)
-  print(ES)
-}
-
-ES(100000)
-
-IC95 <- function(N, t, ES) {
-  IC95low = N - t * ES
-  IC95high = N + t * ES
-  print(c(IC95low, IC95high))
-}
-
-IC95(N = 3000, t= 2.776, ES= 316.2278)
 ```
 
-## Conteo por puntos
+### ANOVA de dos vías 
 
-Tipicamente se utilizan para estimar densidad de aves
+El análisis de varianza (ANOVA) de dos vías es un método estadístico que se utiliza para comparar las diferencias entre dos o más grupos en una medida de interés. Se llama "ANOVA de dos vías" porque examina dos factores a la vez, cada uno de los cuales puede tener varios niveles o categorías. 
+
+```{r}
+table(delomys$status, delomys$sex)
+
+ANOVA_status_sex <- aov(body_mass ~ status + sex, data= delomys)
+summary(ANOVA_status_sex)
+
+```
+
+### MANOVA
+
+El análisis multivariado de varianza (MANOVA) es un método estadístico que se utiliza para comparar las diferencias entre dos o más grupos en múltiples medidas al mismo tiempo. A diferencia del análisis de varianza (ANOVA), que se utiliza para comparar diferencias entre grupos en una sola medida, el MANOVA se utiliza para comparar diferencias en varias medidas simultáneamente.
+
+```{r}
+
+delomys_manova <- manova(cbind(body_mass, body_length) ~ sex + status, data = delomys)
+
+summary(delomys_manova)
+```
+
+### ANCOVA
+
+El análisis de covarianza (ANCOVA) es un método estadístico que se utiliza para comparar las diferencias entre dos o más grupos en una medida de interés, teniendo en cuenta el efecto de una o más variables covariables. Una variable covariable es una variable que puede afectar el resultado de interés y que se mide o observa al mismo tiempo que el resultado de interés.
 
 
+```{r}
+delomys_ancova <- Anova(lm(body_mass ~ sex + status + body_length, data = delomys))
+
+delomys_ancova
+```
+
+:::
+
+## Análisis de correlación
+
+El análisis de correlación es una técnica estadística que se utiliza para determinar si hay una relación entre dos variables. Esta relación se puede medir utilizando el coeficiente de correlación, que puede variar entre -1 y 1. Un coeficiente de correlación cercano a 1 indica una correlación positiva fuerte, lo que significa que a medida que una de las variables aumenta, la otra también aumenta de manera predecible. Un coeficiente de correlación cercano a -1 indica una correlación negativa fuerte, lo que significa que a medida que una de las variables aumenta, la otra disminuye de manera predecible. Un coeficiente de correlación cercano a 0 indica una correlación débil o nula entre las variables.
+
+**Prueba de correlación de pearson**
+
+```{r}
+cor.test(delomys$body_mass, delomys$body_length)
+```
+
+**Prueba de correlación de spearman**
+
+```{r}
+cor.test(delomys$body_mass, delomys$body_length, method = "spearman")
+```
+
+**Grafico de correlacion**
+
+
+```{r}
+library(ggplot2)
+
+ggplot(data= delomys, aes(x =body_length, y= body_mass))+
+  geom_point()+
+  theme_classic()
+```
+
+:::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
-
-
-
