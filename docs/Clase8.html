@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Clase 8: Analisis Multivariado Parte 1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Clase8_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Clase8_files/libs/quarto-html/quarto.js"></script>
+<script src="Clase8_files/libs/quarto-html/popper.min.js"></script>
+<script src="Clase8_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Clase8_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Clase8_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Clase8_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Clase8_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Clase8_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Clase8_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Clase 8: Analisis Multivariado Parte 1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduccion" class="level2">
+<h2 class="anchored" data-anchor-id="introduccion">Introduccion</h2>
+<p>El análisis multivariado de similitud es una técnica de análisis multivariado que se utiliza en ecología y otras disciplinas para evaluar la similitud o diferencia entre grupos de muestras o observaciones. Esta técnica se basa en el uso de medidas de similitud o dissimilaridad, como la distancia euclidiana o la distancia de Bray-Curtis, para calcular la similitud o diferencia entre las muestras o observaciones. Dentro de los métodos de análisis multivariado encontramos el análisis de componentes principales (PCA) o el escalado no métrico multidimensional (NMDS).</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Base de datos</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">PCA</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false" href="">NMDS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false" href="">PERMANOVA</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>Para esta clase utilizaremos la base de datos <code>bettles.txt</code>. Estos datos muestran las abundancias de escarabajos en tres tipos de hábitat en el Reino Unido. Hay 6 réplicas para cada hábitat (Wood, Grass, Edge).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bettles <span class="ot">&lt;-</span> <span class="fu">read.table</span>( <span class="st">"data/bettles.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En nuestra base de datos <code>bettles</code> podemos observar que la variable <code>Habitat</code> es un factor con tres categorias: E: Borde, G: Grama, W: Bosque.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(bettles<span class="sc">$</span>Habitat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+E G W 
+6 6 6 </code></pre>
+</div>
+</div>
+<p>Nuestro objetivo sera determinar si los tipos de habitat presentan disimilitud en base a la comunidad de escarabajos. Para estos realizaremos primero un PCA, y luego un NMDS.</p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Preparacion</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Grafico</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'FactoMineR' was built under R version 4.3.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'factoextra' was built under R version 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggplot2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</code></pre>
+</div>
+</div>
+<p>Antes de realizar nuestro PCA, covertiremos nuestra variable <code>Habitat</code> a factor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bettles<span class="sc">$</span>Habitat <span class="ot">&lt;-</span> <span class="fu">factor</span>(bettles<span class="sc">$</span>Habitat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Algunas veces necesitaremos estandarizar las variables</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>bettles_stan <span class="ot">&lt;-</span> <span class="fu">scale</span>(bettles[,<span class="dv">1</span><span class="sc">:</span><span class="dv">48</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ahora realizamos el PCA</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bettles_pca <span class="ot">&lt;-</span> <span class="fu">PCA</span>(bettles_stan, <span class="at">scale.unit =</span> <span class="cn">TRUE</span>, <span class="at">ncp =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Clase8_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: ggrepel: 24 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="Clase8_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(bettles_pca, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">axes =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">habillage =</span> bettles<span class="sc">$</span>Habitat,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">addEllipses =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">geom =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">arrow =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Clase8_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Preparacion</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Grafico</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>bettles_nmds <span class="ot">&lt;-</span> <span class="fu">metaMDS</span>(bettles[,<span class="dv">1</span><span class="sc">:</span><span class="dv">48</span>], </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distance =</span> <span class="st">"bray"</span>, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">k=</span> <span class="dv">2</span>, <span class="at">trymax =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Square root transformation
+Wisconsin double standardization
+Run 0 stress 0.042627 
+Run 1 stress 0.04575793 
+Run 2 stress 0.0453673 
+Run 3 stress 0.04281237 
+... Procrustes: rmse 0.007498226  max resid 0.02372291 
+Run 4 stress 0.04193601 
+... New best solution
+... Procrustes: rmse 0.01317138  max resid 0.03732037 
+Run 5 stress 0.04281227 
+Run 6 stress 0.04281239 
+Run 7 stress 0.04575821 
+Run 8 stress 0.04544005 
+Run 9 stress 0.0462439 
+Run 10 stress 0.04565175 
+Run 11 stress 0.04547934 
+Run 12 stress 0.04544023 
+Run 13 stress 0.04546674 
+Run 14 stress 0.04575796 
+Run 15 stress 0.04262686 
+Run 16 stress 0.04207822 
+... Procrustes: rmse 0.008331758  max resid 0.02647499 
+Run 17 stress 0.04522205 
+Run 18 stress 0.04193599 
+... New best solution
+... Procrustes: rmse 1.279848e-05  max resid 2.116802e-05 
+... Similar to previous best
+Run 19 stress 0.04536719 
+Run 20 stress 0.04281225 
+*** Best solution repeated 1 times</code></pre>
+</div>
+</div>
+<p>Una vez listo el nmds, revisaremos el stress</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>bettles_nmds<span class="sc">$</span>stress</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.04193599</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Para graficar nuestro nmds con ggplot2 es necesario preparar nuestra base de datos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>NMDS_habitat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Habitat =</span> bettles<span class="sc">$</span>Habitat,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                           bettles_nmds<span class="sc">$</span>points)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>NMDS_habitat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Habitat        MDS1       MDS2
+E1       E -0.08609199 -0.3392866
+E2       E -0.20617689 -0.1620083
+E3       E -0.20200545 -0.3174341
+E4       E  0.16289900 -0.7102254
+E5       E -0.02580060 -0.3877951
+E6       E -0.07004738 -0.1043199
+G1       G  0.92594733  0.4009712
+G2       G  0.67550362  0.2469993
+G3       G  0.70342217 -0.2299563
+G4       G  0.98302496  0.1405089
+G5       G  0.89899443  0.2461925
+G6       G  0.88660548  0.1099731
+W1       W -0.76176230  0.1219001
+W2       W -0.76406549  0.2364569
+W3       W -0.84039393  0.1485550
+W4       W -0.69922079  0.1642153
+W5       W -0.72709645  0.1824889
+W6       W -0.85373571  0.2527647</code></pre>
+</div>
+</div>
+<p>Ahora podemos preparar la tabla para especies de escarabajos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>NMDS_especies <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Especies =</span> <span class="fu">colnames</span>(bettles[,<span class="dv">1</span><span class="sc">:</span><span class="dv">48</span>]),</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                           bettles_nmds<span class="sc">$</span>species)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>NMDS_especies</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Especies        MDS1         MDS2
+Aba.par   Aba.par -0.38103144 -0.009286594
+Acu.dub   Acu.dub  1.22576889  0.465471651
+Ago.afr   Ago.afr  1.11433752  0.215337941
+Ago.ful   Ago.ful  1.19365656  0.542352026
+Ago.mue   Ago.mue  0.09413857 -0.972066709
+Ago.vid   Ago.vid  1.25055215  0.483516950
+Ama.aen   Ama.aen  1.21457744  0.702910703
+Ama.com   Ama.com  1.17922297  0.431580424
+Ama.fam   Ama.fam  1.21457744  0.702910703
+Ama.ple   Ama.ple  1.06360464 -0.072803324
+Ama.sim   Ama.sim  1.28944693  0.246314959
+Bad.bul   Bad.bul  1.21605163  0.284539713
+Bem.big   Bem.big  0.97123927  0.144566133
+Bem.gut   Bem.gut  0.81674667 -0.408995811
+Bem.lam   Bem.lam  0.66081571 -0.147867819
+Bem.man   Bem.man  0.65074922 -0.074511206
+Bem.obt   Bem.obt  1.18483339  0.434539482
+Bra.har   Bra.har  0.88606709  0.432994776
+Bra.sha   Bra.sha  1.09273207  0.434063292
+Cal.fus   Cal.fus  1.07718647  0.212935508
+Cal.rot   Cal.rot -0.57823614  0.026057200
+Car.vio   Car.vio -0.71833662  0.029927567
+Cli.fos   Cli.fos  1.09069048  0.281178178
+Cur.aul   Cur.aul  0.21367679 -1.245039757
+Cyc.car   Cyc.car -1.01288065  0.319978609
+Har.ruf   Har.ruf  0.21367679 -1.245039757
+Lei.fer   Lei.fer  0.52292459 -0.816325344
+Lei.ful   Lei.ful -0.13309323 -0.618665982
+Lei.ruf   Lei.ruf -0.91375261  0.244173759
+Lei.spi   Lei.spi -0.51789317 -0.164071790
+Lor.pil   Lor.pil  0.10658343 -1.000485319
+Neb.bre   Neb.bre -0.47373990  0.028158995
+Not.big   Not.big -0.73002082  0.353313263
+Not.ruf   Not.ruf  1.10495788  0.072625068
+Ocy.har   Ocy.har  0.18749831 -0.318354252
+Pat.atr   Pat.atr  0.21367679 -1.245039757
+Pla.ass   Pla.ass -0.34719161  0.034667491
+Poe.cup   Poe.cup  0.52528007 -0.144042367
+Pte.mad   Pte.mad -0.40517199 -0.008909250
+Pte.mel   Pte.mel -0.10689089 -0.323686126
+Pte.nige Pte.nige -0.46919230  0.113494896
+Pte.nigr Pte.nigr  0.43388494 -0.201756407
+Pte.obl   Pte.obl -0.10113381 -0.696020231
+Pte.str   Pte.str  0.16432838 -0.135301205
+Pte.ver   Pte.ver  1.12853436  0.324407093
+Sto.pum   Sto.pum  0.39822570 -0.173062430
+Syn.niv   Syn.niv  1.08755790  0.399652569
+Tre.qua   Tre.qua  1.20873999  0.391525845</code></pre>
+</div>
+</div>
+<p>Ahora graficaremos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span> NMDS_habitat, <span class="fu">aes</span>(<span class="at">x=</span> MDS1, <span class="at">y=</span> MDS2, <span class="at">color =</span> Habitat))<span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ellipse</span>(<span class="at">data=</span> NMDS_habitat, <span class="fu">aes</span>(<span class="at">x=</span> MDS1, <span class="at">y=</span> MDS2, <span class="at">fill =</span> Habitat),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">geom =</span> <span class="st">"polygon"</span>)<span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data=</span> NMDS_especies, <span class="fu">aes</span>(<span class="at">x=</span> MDS1, <span class="at">y=</span> MDS2, <span class="at">label =</span> Especies),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">size=</span> <span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Clase8_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"nmds.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">units =</span> <span class="st">"cm"</span>, <span class="at">width =</span> <span class="dv">15</span>, <span class="at">height =</span> <span class="dv">15</span>, <span class="at">dpi =</span> <span class="dv">450</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
+<p>PERMANOVA es un método de análisis de la varianza multivariante que se utiliza para evaluar la similitud o diferencias entre grupos de muestras en una o más variables categóricas o continúas. Se basa en el análisis de la varianza univariante (ANOVA), pero es más adecuado para datos multivariantes en los que hay más de una variable dependiente.</p>
+<p>El método de PERMANOVA permite comparar grupos de muestras en términos de la similitud o diferencias de sus patrones de variación en un conjunto de variables. Se puede utilizar para evaluar si hay diferencias significativas entre grupos de muestras en un conjunto de variables y si hay una asociación entre estas variables y la variable categórica independiente.</p>
+<p>El método de PERMANOVA se puede aplicar a cualquier tipo de datos multivariantes, incluyendo datos de composición química, datos de secuenciación de ADN, datos de imágenes y datos de mediciones físicas o químicas. Se puede utilizar para evaluar la similitud o diferencias entre grupos de muestras en una amplia variedad de contextos, como la ecología, la biología molecular y la ingeniería.</p>
+<p>En R, el método de PERMANOVA se puede realizar mediante el uso de la función adonis del paquete vegan.</p>
+<p><strong>Ejemplo</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>bettles_per <span class="ot">&lt;-</span> <span class="fu">adonis2</span>(bettles[ , <span class="dv">1</span><span class="sc">:</span><span class="dv">48</span>] <span class="sc">~</span> Habitat, <span class="at">data =</span> bettles)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>bettles_per</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+adonis2(formula = bettles[, 1:48] ~ Habitat, data = bettles)
+         Df SumOfSqs     R2      F Pr(&gt;F)    
+Habitat   2  1.30897 0.8585 45.503  0.001 ***
+Residual 15  0.21575 0.1415                  
+Total    17  1.52472 1.0000                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>El estadístico <code>F</code> mide la relación entre la varianza explicada por el modelo y la varianza no explicada por el modelo. Se calcula como la relación entre la varianza media de los grupos y la varianza media de los residuales.</p>
+<p>Un valor alto de F indica que hay una gran diferencia entre la varianza explicada por el modelo y la varianza no explicada, lo que sugiere que el modelo es un buen ajuste para los datos. Por el contrario, un valor bajo de F indica que hay poca diferencia entre la varianza explicada y la no explicada, lo que sugiere que el modelo no es un buen ajuste para los datos.</p>
+<p><code>El coeficiente de determinación (R²)</code> es una medida de qué tan bien un modelo se ajusta a los datos. En el contexto de un análisis de varianza multivariado permutado (PERMANOVA), R² se utiliza para evaluar qué tan bien el modelo de PERMANOVA se ajusta a los datos.</p>
+<p>El valor de R² se calcula como la relación entre la varianza total explicada por el modelo y la varianza total de los datos. Un valor de R² cercano a 1 indica un ajuste muy bueno del modelo a los datos, mientras que un valor de R² cercano a 0 indica un ajuste pobre.</p>
+<p>El R² para los residuales mide qué tan bien el modelo se ajusta a los datos excluyendo la varianza explicada por el efecto de los factores. Es decir, mide la proporción de varianza total que no es explicada por el modelo. Un valor alto de R² para los residuales indica un ajuste pobre del modelo a los datos, mientras que un valor bajo indica un ajuste bueno.</p>
+<p>El R² para el total mide qué tan bien el modelo se ajusta a los datos incluyendo la varianza explicada por el efecto de los factores. Es decir, mide la proporción de varianza total explicada por el modelo. Un valor alto de R² para el total indica un ajuste muy bueno del modelo a los datos, mientras que un valor bajo indica un ajuste pobre.</p>
+<p><strong>Prueba de contraste</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RVAideMemoire)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'RVAideMemoire' was built under R version 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>*** Package RVAideMemoire v 0.9-83-7 ***</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>bettles_per_con <span class="ot">&lt;-</span> <span class="fu">pairwise.perm.manova</span>(<span class="fu">dist</span>(bettles[,<span class="dv">1</span><span class="sc">:</span><span class="dv">48</span>]), bettles<span class="sc">$</span>Habitat,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">nperm =</span> <span class="dv">999</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>bettles_per_con</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using permutation MANOVAs on a distance matrix 
+
+data:  dist(bettles[, 1:48]) by bettles$Habitat
+999 permutations 
+
+  E     G    
+G 0.003 -    
+W 0.122 0.006
+
+P value adjustment method: fdr </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">HN Biology Investigation Academy</figcaption>
+</figure>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
