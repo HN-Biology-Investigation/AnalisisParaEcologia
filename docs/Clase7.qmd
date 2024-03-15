@@ -1,238 +1,173 @@
 ---
-title: "Clase 5: Uso de Unmarked, Estimación de abundancia por conteo por puntos"
+title: "Clase 7: Modelos lineales Generalizados"
 format: html
 editor: visual
 ---
 
-Unmarked se destaca como uno de los paquetes más populares para ajustar modelos de abundancia que incorporan variables de detección. A diferencia de Distance, este paquete se caracteriza por su mayor complejidad y una versatilidad notable en la capacidad de ajustar modelos más detallados. Requiere un nivel de conocimiento en R al menos intermedio para aprovechar plenamente su potencial, debido a su complejidad y las múltiples opciones de modelado que ofrece.
+Un modelo lineal general (GLM) con una distribución binomial se utiliza para modelar datos de respuesta binaria, es decir, datos que tienen solo dos posibles resultados, como sí/no, verdadero/falso o exitoso/fracasado. La distribución binomial se basa en la ley de Bernoulli, que describe el comportamiento de una secuencia de eventos independientes y binarios.
 
-En esta clase se obordara como utilizar Unmarked para modelar abundancia de especies para lo cuales se tomaran datos por medio de conteo por puntos. En la clase se explicara desde cero el uso de este paquete y paso a paso como ajustar, seleccionar, validar, interpretar y graficar el modelo, incluso la presancion de los datos para publicaciones cientificas.
-
-En esta clase, exploraremos el uso de Unmarked para modelar la abundancia de especies a partir de datos recopilados mediante conteo por puntos. Desde los fundamentos, explicaremos paso a paso cómo utilizar este paquete, cubriendo el proceso completo: desde el ajuste inicial del modelo hasta la selección, validación e interpretación de los resultados. También abordaremos la presentación de los datos para su inclusión en publicaciones científicas, asegurando un entendimiento completo y la capacidad de aplicar estos modelos de manera efectiva en contextos de investigación y divulgación científica.
 
 ::: panel-tabset
-## Cargar base de datos
+
+## Base de datos
+
+Para esta clase utilizaremos una base de datos de pumpkinsedd fish (*Lepornis gibbosus*), algunos individuos tienen un conspicuo punto rojo sobre su operculum que ha sido asociado con el comportamiento de dominancia. Zieba *et al*. (2018) investigo la funcion de este punto rojo en poblaciones de pumpkinseed colectados a lo largo de Europa donde la especie es invasiva.
+
+La base de datos colectada por Zieba *et al*. (2018) incluye individuos con estrategias de aparamiento (female, male territoeial, male sneaker), longitud en mm, peso en gramos, y presencia del punto rojo. Sexo y estrategia de apareamiento fueron asignadas por disseccion de las gonodas. Presencia del punto rojo es la variable respuesta, y las demas variables son covariables. 
+
+Para cargar la base de datos utilizaremos el siguiente comando
 
 ```{r}
-Aves <- read.csv("data/AvesHabitatUm.csv")
+pkin <- read.table(file = "https://www.dropbox.com/s/xq2dojah9k0kftu/pumpkinseed.txt?dl=1",
+                   header= TRUE, dec = ".", stringsAsFactors = TRUE)
 ```
 
-Seleccionar variables necesarias
+Empezaremos con una ligera ispeccion de los datos
 
 ```{r}
-
-library(tidyverse)
-
-AvesLimpia <- Aves %>% 
-  select(Site, VEGID, Type, ALTITUDE, Area_Basal, Hora, Fecha, Cielo, Viento, Especies, Abundancia) %>% 
-  mutate(Fecha = as.Date(Fecha, format = "%m/%d/%Y")) %>% 
-  mutate(Hora = as.integer(str_replace(Hora, ":", "")))
-  
-AvesOrdenadas <- AvesLimpia %>%
-  arrange(Site, Especies, Fecha, Hora, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  group_by(Site, Especies, Fecha, Hora, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  summarise(Abundancia = max(Abundancia)) %>%
-  group_by(Site, Fecha, Hora,  Especies, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  mutate(Orden = factor(row_number())) %>% 
-  filter(Orden %in% c(1, 2, 3))
-
-CarpusPivot <- AvesOrdenadas %>% 
-  pivot_wider(names_from = Especies, values_from = Abundancia, values_fill = 0) %>% 
-  select(Site, VEGID, Type, ALTITUDE, Area_Basal, Fecha, Hora, Orden, CARPUS)
-
-CarpusPivotOrden <- CarpusPivot %>%
-  arrange(Site, VEGID, Type, ALTITUDE, Area_Basal, CARPUS, Fecha, Hora) %>%
-  group_by(Site,VEGID, Type, ALTITUDE, Area_Basal, CARPUS) %>%
-  mutate(Orden = factor(row_number())) %>% 
-  filter(!is.na(Site))
-  
-
-head(CarpusPivotOrden)
+str(pkin)
 ```
 
-## Formatear base de datos a formato unmarked
+La base de datos comprende 900 observaciones con 6 variables. Cada filarepresenta un individuo de pumpkinseed collectado de diferente poblaciones. 
 
-Pasar cada replica en columnas diferentes de acuerdo a la especie de ave
+- pop: Poblacion
+- sex: sex
+- tactic: sistema de apareamiento
+- wt: peso del pez
+- sl: longitud
+- spot: presencia del punto rojo
+
+## Modelos candidatos
+
+
+Para construir un GLM con una distribución binomial en R, puede utilizar la función "glm()" y especificar la familia "binomial" en el argumento "family".
 
 ```{r}
-
-
-# Crear un conjunto de datos con todos los niveles de Orden por Site
-CARPUSunmarked <- CarpusPivotOrden %>%
-  filter(!is.na(Fecha)) %>% 
-  mutate(Orden = as.numeric(Orden)) %>% 
-  complete(Orden = 1:3) %>%
-  mutate(CARPUS = ifelse(is.na(Fecha), NA, CARPUS),
-         CARPUS = replace_na(CARPUS, 50))
-
-# Pivot_wider
-CARPUSunmarkedReady <- CARPUSunmarked %>%
-  mutate(Fechaord = yday(Fecha)) %>% 
-  group_by(Site, Orden, VEGID, Type, ALTITUDE, Area_Basal) %>%
-  summarise(CARPUS = max(CARPUS),
-            Fechaord = max(Fechaord),
-            Hora = max(Hora)) %>% 
-  ungroup() %>%
-  group_by(Site, VEGID, Type, ALTITUDE, Area_Basal) %>% 
-  pivot_wider(names_from = Orden,
-              values_from = c(Fechaord, Hora, CARPUS),
-              values_fill =  0) %>% 
-  mutate(CARPUS_1 = replace(CARPUS_1, CARPUS_1 == 50, NA)) %>% 
-  mutate(CARPUS_2 = replace(CARPUS_2, CARPUS_2 == 50, NA)) %>% 
-  mutate(CARPUS_3 = replace(CARPUS_3, CARPUS_3 == 50, NA)) 
-
-
+ModelosCan <- list("fit1_pkin" = glm(spot ~ pop, family = binomial(link = "logit"), data = pkin),
+"fit2_pkin" = glm(spot ~ sex, family = binomial(link = "logit"), data = pkin),
+"fit3_pkin" = glm(spot ~ tactic, family = binomial(link = "logit"), data = pkin),
+"fit4_pkin" = glm(spot ~ wt, family = binomial(link = "logit"), data = pkin),
+"fit5_pkin" = glm(spot ~ sl, family = binomial(link = "logit"), data = pkin),
+"fit6_pkin" = glm(spot ~ pop + sex + tactic, family = binomial(link = "logit"), data = pkin),
+"fit7_pkin" = glm(spot ~ sex + wt + sl, family = binomial(link = "logit"), data = pkin),
+"fit8_pkin" = glm(spot ~ tactic + wt + sl, family = binomial(link = "logit"), data = pkin),
+"fit9_pkin" = glm(spot ~ pop:sex, family = binomial(link = "logit"), data = pkin),
+"fit10_pkin" = glm(spot ~ pop:tactic, family = binomial(link = "logit"), data = pkin),
+"fit10_pkin" = glm(spot ~ wt*sl, family = binomial(link = "logit"), data = pkin))
 ```
 
-## Crear variables de detectabilidad
-
-```{r}
-## Definir ocasiones de deteccion
-CARPUS_y <- CARPUSunmarkedReady[,12:14]
-# y[y > 1] <- 1
-
-
-## Definir los variables asociados a la deteccion:
-
-
-Fecha_CARPUS= list(Fecha=CARPUSunmarkedReady[,6:8]) 
-
-# Y quien realizo la observacion
-
-Hora_CARPUS= list(Hora=CARPUSunmarkedReady[,9:11]) 
-
-
-```
-
-## Crear variables de habitat (covariables)
-
-```{r}
-## Definir los variables de covarianza
-
-CARPUS_siteCovs <- CARPUSunmarkedReady[,c("Type", "ALTITUDE", "Area_Basal")]
-```
-
-## Crear tabla unmarked
-
-```{r}
-
-library(unmarked)
-
-## CREAR DATA FRAME
-CARPUSunmarked_df <- unmarkedFramePCount(y = CARPUS_y, siteCovs = CARPUS_siteCovs, 
-                                    obsCovs=c(Fecha_CARPUS, Hora_CARPUS))
-
-summary(CARPUSunmarked_df)
-
-```
-
-## Ajustar modelo de deteccion
-
-```{r}
-#### MODELAR DETECCION PRIMERO
-
-ModelDet0 <- pcount(~1 ~1, CARPUSunmarked_df) ##Null model
-
-ModelDet1 <- pcount(~Fecha ~1, CARPUSunmarked_df)
-
-ModelDet2 <- pcount(~Hora ~1, CARPUSunmarked_df)
-
-ModelDet3 <- pcount(~Fecha + Hora ~1, CARPUSunmarked_df)
-```
-
-## Seleccion de modelo de deteccion
+## Sellecion del modelo
 
 ```{r}
 library(AICcmodavg)
 
-DetModels <- list(ModelDet0, ModelDet1, ModelDet2, ModelDet3)
+aictab(ModelosCan)
 
-DetNames <- c("Nulo", "Fecha", "Hora", "Fecha + Hora")
 
-aictab(DetModels, DetNames, sort = TRUE)
 ```
 
-## Ajustar modelo de Abundancia
+## Validacion del modelo
+
+Usaremos el paquete `DHARma`
 
 ```{r}
-#### MODELAR DETECCION PRIMERO
+library(DHARMa)
 
-ModelAbun0 <- pcount(~1 ~ 1, CARPUSunmarked_df) ##Null model
-
-ModelAbun1 <- pcount(~1 ~ Type, CARPUSunmarked_df)
-
-ModelAbun2 <- pcount(~1 ~ ALTITUDE, CARPUSunmarked_df)
-
-ModelAbun3 <- pcount(~1 ~ Area_Basal, CARPUSunmarked_df)
+testResiduals(ModelosCan$fit6_pkin)
 ```
 
-## Seleccion de modelo de abundancia
+La distancia de Cook es una medida de la influencia de un punto de datos en un modelo de regresión. Un punto de datos con una distancia de Cook alta puede tener un gran impacto en el modelo y puede ser un indicador de que el modelo no se ajusta adecuadamente a los datos.
 
 ```{r}
-library(AICcmodavg)
+plot(cooks.distance(ModelosCan$fit6_pkin),
+     main="Distancia de Cook", 
+     xlab="Indice del punto de datos", 
+     ylab="Distancia de Cook")
 
-AbunModels <- list(ModelAbun0, ModelAbun1, ModelAbun2, ModelAbun3)
-
-AbunNames <- c("Nulo", "Type", "ALTITUDE", "Area_Basal")
-
-aictab(AbunModels, AbunNames, sort = TRUE)
 ```
 
-## Resumen de los resultados
+
+## Interpretacion del Modelo
 
 ```{r}
-summary(ModelAbun3)
-confint(ModelAbun3, type = "state", level = 0.9)
+summary(ModelosCan$fit6_pkin)
 ```
 
-## Bondad de ajuste
+## Graficos
 
-```{r, warning=FALSE, message=FALSE}
+::: panel-tabset
 
+### Categoricos
 
-fitstats <- function(Mod_global2) {
-  observed <- getY(Mod_global2@data)
-  expected <- fitted(Mod_global2)
-  resids <- residuals(Mod_global2)
-  sse <- sum(resids^2,na.rm=TRUE)
-  chisq <- sum((observed - expected)^2 / expected,na.rm=TRUE)
-  freeTuke <- sum((sqrt(observed) - sqrt(expected))^2,na.rm=TRUE)
-  out <- c(SSE=sse, Chisq=chisq, freemanTukey=freeTuke)
-  return(out)
-}
-
-(pb <- parboot(ModelAbun3, fitstats, nsim=100, report=1))
-
-cHat_pb <- pb@t0[2] / mean(pb@t.star[,2])
+- **Sex**
 
 
-MigGOF <- Nmix.gof.test(ModelAbun3, nsim = 100, report = 3)
+```{r, fig.align='center'}
+library(ggplot2)
+library(sjPlot)
+library(effects)
 
+eff <- effect("sex", ModelosCan$fit2_pkin)
+plot(eff, ci.style = "auto")
 
 ```
 
-## Prepar data para graficar
+- **Tactic**
+
+
+```{r, fig.align='center'}
+eff <- effect("tactic", ModelosCan$fit3_pkin)
+plot(eff, ci.style = "auto")
+
+```
+
+
+- **Poblacion**
 
 ```{r}
-CARPUS_arear_basal <- data.frame(Area_Basal = seq(min(CARPUSunmarkedReady$Area_Basal, na.rm = TRUE), max(CARPUSunmarkedReady$Area_Basal, na.rm = TRUE), length.out = 100))
-                                 
-Carpus_pre_area_basal <- predict(ModelAbun3, newdata = CARPUS_arear_basal, type = "state")
+eff <- effect("pop", ModelosCan$fit1_pkin)
+plot(eff, ci.style = "auto")
 
-Carpus_pre_area_basal$Area_Basal <- CARPUS_arear_basal$Area_Basal 
 ```
 
-## Graficar modelo
 
-```{r}
-ggplot(data= Carpus_pre_area_basal, aes(x= Area_Basal, y= Predicted))+
-  geom_ribbon(aes(ymin= lower,
-                  ymax= upper), fill = "lightblue") +
-  geom_line(color= "black") +
-  labs(x = "Area Basal", 
-       y = "Abundancia")+
-  ggtitle("Relacion de Cardenilla pusilla versus el area basal") +
-  theme_classic()
+### Continuos
+
+
+```{r, fig.align='center'}
+
+wt <- ggplot(data= pkin, aes(x= wt , y= spot)) +
+  stat_smooth(method = "glm", method.args = list(family = "binomial"))+
+  geom_point()+
+  theme_bw()
+
+sl <- ggplot(data= pkin, aes(x= sl , y= spot)) +
+  stat_smooth(method = "glm", method.args = list(family = "binomial"))+
+  geom_point()+
+  theme_bw()
+
+cowplot::plot_grid(wt, sl, nrow = 1, ncol = 2)
 ```
+
+### Interaccion
+
+```{r, fig.align='center'}
+
+wt_sex <- ggplot(data= pkin, aes(x= wt , y= spot, color = sex)) +
+  stat_smooth(method = "glm", method.args = list(family = "binomial"))+
+  geom_point()+
+  theme_bw()
+
+sl_sex <- ggplot(data= pkin, aes(x= sl , y= spot, color = sex)) +
+  stat_smooth(method = "glm", method.args = list(family = "binomial"))+
+  geom_point()+
+  theme_bw()
+
+cowplot::plot_grid(wt_sex, sl_sex, nrow = 1, ncol = 2)
+```
+
+:::
+
 :::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)

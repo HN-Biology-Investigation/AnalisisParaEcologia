@@ -13,7 +13,7 @@ Bienvenidos a este curso diseñado para profesionales, estudiantes y personas in
 ### Contenido
 
 
-[Asignaciones](Asignaciones.html)
+[Asignaciones](Asiganciones.html)
 
 [Clase 1: Comandos basicos en R y uso de scripts](Clase1.html)
 

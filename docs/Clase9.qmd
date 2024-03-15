@@ -1,185 +1,124 @@
 ---
-title: "Clase 8: Introducción a spAbundance y a spOccupancy"
+title: "Clase 9: Analisis Multivariado Parte 2"
 format: html
 editor: visual
 ---
 
-::: panel-tabset
-## Inferencia frecuentista versus bayesiana
-
-La siguiente informacion es basada del libro: Bayesian GLMs in R for Ecology, Mark Wrren & Carl Smith, 2021.
-
-[Orcid Autor](https://orcid.org/0000-0003-3285-0379)
-
-[Referencia](https://www.waterstones.com/book/bayesian-glms-in-r-for-ecology/mark-warren/carl-smith/9798498164656)
-
--   La inferencia bayesiana es atribuida a Thomas Bayes, un clerigo, filosofo y estadistico del siglo XVIII. La estadistica frecuentista fue desarrollada mucho despues, en el siglo XX, por diferentes personas, incluyendo Sir Ronald Fisher y Jerzy Splawa-Neyman.
-
-### Diferencias entre inferencia Bayesiana y Frecuentista
-
-| Inferencia Bayesiana                                                                                                                                                                                                                           | Inferencia Frecuentista                                                                                                      |
-|-----------------------------------|-------------------------------------|
-| Provee una medida de probabilidad de que la hipótesis sea verdadera dada los datos; P(H/D)                                                                                                                                                     | Inferencia basada en la probabilidad (P) de los datos (D) dada la hipótesis (H); P(D/H)                                      |
-| Los parámetros de los modelos son variables aleatorias con conocimiento medible y probabilístico como una medida de "grados de creencia"                                                                                                       | La manera de implementación es probar los datos versus una hipótesis para responder las preguntas                            |
-| Genera distribuciones posteriores de parámetros dados los datos e información previa (prior information); los resultados proveen un panorama completo de la incertidumbre y permiten discernir los parámetros de los modelos con mayor certeza | Utilizando la probabilidad (valor-P) de que los datos respalden la hipótesis nula; el valor típicamente aceptado es de 0.05. |
-| La distribución posterior es proporcional a la evidencia en combinación con el conocimiento previo sobre el sistema                                                                                                                            | Si la hipótesis nula es rechazada, la alternativa es aceptada                                                                |
-
-> La inferencia bayesiana precede a la inferencia frecuentista por aproximadamente 200 años.
-
-En la Inferencia Bayesiana:
-
--   La distribución a priori representa la incertidumbre antes de observar los datos.
-
--   La distribución a posteriori representa la incertidumbre actualizada después de observar los datos.
-
--   Los intervalos de credibilidad bayesianos se utilizan para cuantificar la incertidumbre sobre los parámetros del modelo.
-
-## spAbundance
-
-[Referecia](https://arxiv.org/abs/2310.19446)
-
-El paquete spAbundance ajusta modelos univariados (es decir, de una sola especie) y multivariados (es decir, de múltiples especies) de mezcla espacial N, modelos jerárquicos de muestreo de distancia y modelos mixtos generalizados lineales utilizando cadenas de Markov Monte Carlo (MCMC). Los modelos espaciales se ajustan utilizando Procesos Gaussianos de Vecino más Cercano (NNGPs) para facilitar el ajuste del modelo a grandes conjuntos de datos espaciales. spAbundance utiliza una sintaxis análoga a su "paquete hermano" spOccupancy (Doser et al. 2022). A continuación, proporcionamos una introducción muy breve a algunas de las funcionalidades del paquete e ilustramos solo una de las funciones de ajuste del modelo. Para obtener más información, consulta los recursos referenciados al final de esta página y la pestaña "Artículos" en la parte superior de la página.
-
-[spAbundance](https://www.jeffdoser.com/files/spabundance-web/)
-
-[Ejemplos usando spAbundance](https://www.jeffdoser.com/files/spabundance-web/articles/)
-
-En esta clase, vamos a explorar el paquete spAbundance y comparar su implementación con los paquetes Distance y Unmarked.
+# Introduccion 
 
 ::: panel-tabset
-### Cargar paquetes
 
-```{r, warning=FALSE, message=FALSE}
-library(spAbundance)
-library(tidyverse)
-```
+El análisis multivariado de similitud es una técnica de análisis multivariado que se utiliza en ecología y otras disciplinas para evaluar la similitud o diferencia entre grupos de muestras o observaciones. Esta técnica se basa en el uso de medidas de similitud o dissimilaridad, como la distancia euclidiana o la distancia de Bray-Curtis, para calcular la similitud o diferencia entre las muestras o observaciones.
 
-### Cargar Base de datos
+## Base de datos
 
-```{r}
-CARPUS <- readRDS("data/CARPUSunmarked.rds")
-```
+Para esta clase utilizaremos la base de datos `bettles.txt`. Estos datos muestran las abundancias de escarabajos en tres tipos de hábitat en el Reino Unido. Hay 6 réplicas para cada hábitat (Wood, Grass, Edge).
 
-### Preparar datos para la tabla
-
-```{r}
-CARPUS_y <- CARPUS[,12:14]
-
-CARPUS$Type <- factor(CARPUS$Type)
-
-covs <- list(Elevacion = CARPUS[,4],
-             Habitat = CARPUS[,3],
-             AreaBasal = CARPUS[,5])
-
-
-CARPUS_covs <- list(y= CARPUS_y, covs = covs)
-```
-
-### Ajustar modelo
-
-```{r, message=FALSE, warning=FALSE, results='hide'}
-out <- abund(formula = ~ 1,
-             data = CARPUS_covs,
-             n.rep = 1000, family = "Poisson",
-             n.batch = 300, batch.length = 100)
-
-out1 <- abund(formula = ~ Elevacion,
-             data = CARPUS_covs,
-             n.rep = 1000, family = "Poisson",
-             n.batch = 300, batch.length = 100)
-
-out2 <- abund(formula = ~ Habitat ,
-             data = CARPUS_covs,
-             n.rep = 1000, family = "Poisson",
-             n.batch = 300, batch.length = 100)
-
-out3 <- abund(formula = ~ AreaBasal,
-             data = CARPUS_covs,
-             n.rep = 1000, family = "Poisson",
-             n.batch = 300, batch.length = 100)
-```
-
-### Seleccion de modelo mas adecuado
 
 ```{r,}
-waicAbund(out)
-waicAbund(out1)
-waicAbund(out2)
-waicAbund(out3)
+
+bettles <- read.table( "data/bettles.txt")
+
 ```
 
--   elpd: Es el logaritmo de la densidad predictiva efectiva, que es una medida de la bondad de ajuste del modelo. Cuanto mayor sea el valor de elpd, mejor se ajusta el modelo a los datos observados.
+## ANOSIM
 
--   pD: Es el número efectivo de parámetros del modelo. Indica la complejidad del modelo y se utiliza para penalizar la complejidad del modelo en el cálculo del WAIC. Un valor más alto de pD indica un modelo más complejo.
+ANOSIM (Analysis of Similarities) es un método de análisis multivariante que se utiliza para evaluar la similitud o diferencias entre grupos de muestras en una o más variables categóricas o continúas. Se basa en el análisis de la varianza univariante (ANOVA), pero es más adecuado para datos multivariantes en los que hay más de una variable dependiente.
 
--   WAIC: Es el criterio de información Watanabe-Akaike. Es una medida de la calidad predictiva del modelo que tiene en cuenta tanto la bondad de ajuste como la complejidad del modelo. Cuanto más bajo sea el valor de WAIC, mejor será el modelo en términos de balance entre ajuste y complejidad.
-
-### Validacion del modelo
+El método de ANOSIM permite comparar grupos de muestras en términos de la similitud o diferencias de sus patrones de variación en un conjunto de variables. Se puede utilizar para evaluar si hay diferencias significativas entre grupos de muestras en un conjunto de variables y si hay una asociación entre estas variables y la variable categórica independiente.
 
 ```{r}
-ppc.out <- ppcAbund(out3, fit.stat = 'freeman-tukey', group = 0)
-ppc.out2 <- ppcAbund(out3, fit.stat = 'chi-squared', group = 0)
-
-summary(ppc.out)
-summary(ppc.out2)
+library(vegan)
+library(indicspecies)
 ```
 
--   El valor p bayesiano es mayor que 0.1 y menor que 0.9, lo que indica un ajuste adecuado a los datos
+**Ejemplo para correr anosim en R**
 
-### Revision de modelo
-
-```{r,}
-summary(out3)
-
-# Abundance regression coefficients
-plot(out, param = 'beta', density = FALSE)
-
-```
-
-### Preparar tabla para graficar
 
 ```{r}
-AreaBasal <- data.frame(AreaBasal = seq(min(CARPUS$Area_Basal, na.rm = TRUE), 
-                                  max(CARPUS$Area_Basal, na.rm = TRUE), 
-                                  length.out = 100))
+bettles_anosim <- anosim(bettles[,1:48], bettles$Habitat, permutations = 999, distance = "bray")
 
-AreaBasal.s <- AreaBasal - mean(CARPUS$Area_Basal, na.rm = TRUE) / 
-                   sd(CARPUS$Area_Basal, na.rm = TRUE)
+bettles_anosim
 
+plot(bettles_anosim)
 
-X.0 <- as.matrix(data.frame(intercept = 1, AreaBasal = AreaBasal.s))
-
-out.pred <- predict(out3, X.0, ignore.RE = TRUE)
-
-# Get the lower bound, median, and 95% credible interval
-mu.0.quants <- apply(out.pred$mu.0.samples, 2, quantile, 
-                     prob = c(0.025, 0.5, 0.975))
-
-mu.plot.dat <- data.frame(mu.med = mu.0.quants[2, ], 
-                          mu.low = mu.0.quants[1, ], 
-                          mu.high = mu.0.quants[3, ], 
-                          AreaBasal = AreaBasal)
 ```
 
-### Graficar modelo
+Los resultados del análisis incluyen el valor de R (un valor entre -1 y 1 que indica la fuerza de la relación entre los grupos) y el valor de p. Si el valor de p es menor que un alpha (por ejemplo, 0.05), entonces podemos decir que hay diferencias significativas entre los grupos.
+
+
+
+## MRPP
+
+El método de Multi Response Permutation Procedure (MRPP) es una herramienta de análisis multivariante que se utiliza para evaluar la similitud o diferencias entre grupos de muestras en una o más variables categóricas o continúas. Se basa en el análisis de la varianza univariante (ANOVA), pero es más adecuado para datos multivariantes en los que hay más de una variable dependiente.
+
+El método de MRPP permite comparar grupos de muestras en términos de la similitud o diferencias de sus patrones de variación en un conjunto de variables. Se puede utilizar para evaluar si hay diferencias significativas entre grupos de muestras en un conjunto de variables y si hay una asociación entre estas variables y la variable categórica independiente.
+
+**Ejemplo de mrpp en R**
 
 ```{r}
-ggplot(mu.plot.dat, aes(x = AreaBasal, y = mu.med)) + 
-  geom_ribbon(aes(ymin = mu.low, ymax = mu.high), fill = 'lightblue', alpha = 0.5) +
-  geom_line() + 
-  theme_bw() + 
-  labs(x = 'Covariate', y = 'Expected abundance') +
-  theme_classic()
+bettles_mrpp <- mrpp(bettles[,1:48], bettles$Habitat, permutations = 999, distance = "bray")
+
+bettles_mrpp
 ```
+
+el valor "A" se utiliza para medir la disimilitud intrasistemas, mientras que el valor "delta" se utiliza para medir la disimilitud intersistemas.
+
+La disimilitud intrasistemas se refiere a la disimilitud o similitud promedio entre todas las sitios de observaciones dentro de cada grupo. Por ejemplo, en el habitat de borde `E`, si queremos saber si hay diferencias significativas entre los sitios de muestreo de `E`, podríamos medir la disimilitud intrasistemas comparando la similitud promedio entre todas los sitios de muestreo, que en este caso es 0.1325.
+
+La disimilitud intersistemas, por otro lado, se refiere a la disimilitud o similitud promedio entre todas los sitios de observaciones entre los habitats. Qu en este caso es 0.3657. Como solo tenemos un valor para la disimilitud intersistema, necesitaremos una prueba de contraste.
+
+
+**Prueba de contraste basada en mrpp en R**
+
+```{r}
+contraste_mrpp <- meandist(vegdist(bettles[,1:48], method = "bray"), bettles$Habitat)
+  
+contraste_mrpp
+
+plot(contraste_mrpp)
+```
+
+
+## SIMPER
+
+SIMPER (Similarity Percentages) es un método de análisis multivariante que se utiliza para evaluar la similitud o diferencias entre grupos de muestras en una o más variables categóricas o continúas. Se basa en el análisis de la varianza univariante (ANOVA), pero es más adecuado para datos multivariantes en los que hay más de una variable dependiente.
+
+El método de SIMPER permite comparar grupos de muestras en términos de la similitud o diferencias de sus patrones de variación en un conjunto de variables. Se puede utilizar para evaluar si hay diferencias significativas entre grupos de muestras en un conjunto de variables y si hay una asociación entre estas variables y la variable categórica independiente.
+
+**Ejemplo de simper en R**
+
+
+```{r}
+bettles_simper <- simper(bettles[,1:48], bettles$Habitat, permutations = 999)
+bettles_simper
+
+```
+La contribución se refiere al porcentaje de contribución de la variable al desimilaridad global entre los grupos. Por ejemplo, si la contribución de una variable es del 50%, significa que esa variable es responsable de la mitad de la desimilaridad entre los grupos.
+
+El SE.Contribución (error estándar de la contribución) es una medida de la precisión de la contribución de la variable. Es decir, mide cuán cerca está la contribución real de la variable de la contribución estimada. A mayor SE.Contribución, mayor incertidumbre en cuanto a la contribución real de la variable.
+
+Es importante tener en cuenta que el SIMPER es una herramienta de análisis de datos que se utiliza para identificar qué variables están contribuyendo de manera significativa a la desimilaridad entre dos o más grupos. Es útil para entender qué variables son las más importantes en la diferenciación entre los grupos y para identificar posibles patrones o tendencias en los datos.
+
+## Indicador de especies
+
+Determinar la ocurrencia o abundancia de un pequeño conjunto de especies indicadoras, como alternativa a muestrear toda la comunidad, ha resultado particularmente útil en la monitorización ambiental a largo plazo para la conservación o el manejo ecológico. Las especies se eligen como indicadores si:
+
+reflejan el estado biótico o abiótico del entorno;
+proporcionan evidencia de los impactos del cambio ambiental; o
+predicen la diversidad de otras especies, táxones o comunidades dentro de un área.
+
+**Ejemplo en R**
+
+```{r}
+bettles_indicadores <- multipatt(bettles[,1:48], bettles$Habitat, control = how(nperm = 999))
+
+summary(bettles_indicadores)
+```
+
+El estadístico "stat" se refiere a cualquier estadístico o medida de rendimiento incluida en los resultados del análisis de patrones múltiples (puede estar en un rango de 0 a 1). Estos estadísticos y medidas de rendimiento pueden ser útiles para interpretar los resultados del análisis y evaluar la precisión de la predicción de la variable de respuesta a partir de las variables predictivas.
+
 :::
 
-## spOccupancy
-
-[Referencia](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.13897)
-
-spOccupancy ajusta modelos de ocupación espacial de especies individuales, múltiples especies e integrados utilizando el método de Monte Carlo por cadenas de Markov (MCMC). Los modelos se ajustan utilizando la técnica de aumento de datos Pólya-Gamma. Los modelos espaciales se ajustan utilizando procesos gaussianos o procesos gaussianos de vecinos más cercanos (NNGP) para conjuntos de datos espaciales grandes. El paquete proporciona funcionalidad para la integración de datos de ocupación de múltiples especies individuales utilizando un marco de verosimilitud conjunta. Para modelos de múltiples especies, spOccupancy proporciona funciones para tener en cuenta las correlaciones residuales entre especies en un marco de modelo de distribución de especies conjuntas mientras se tiene en cuenta la detección imperfecta. A partir de la versión 0.4.0, spOccupancy proporciona funciones para modelos de ocupación de especies individuales de múltiples temporadas (es decir, espacio-temporales). A continuación, proporcionamos una introducción muy breve a algunas de las funcionalidades del paquete, e ilustramos solo una de las funciones de ajuste de modelos. Para obtener más información, consulte los recursos referenciados al final de esta página.
-
-[Elemplos para spOcupancy](https://www.jeffdoser.com/files/spoccupancy-web/articles/)
-:::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
