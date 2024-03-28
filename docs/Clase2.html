@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Clase 2</title>
+<title>Clase 2: Analisis de Diversidad</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Clase 2</h1>
+<h1 class="title">Clase 2: Analisis de Diversidad</h1>
 </div>
 
 
@@ -96,12 +96,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<div style="display:flex; align-items:center;">
-<h1 style="margin:0;">
-Clase 2: Analisis de Diversidad
-</h1>
-<p><img src="imagenes/HNBI_LOGO2.jpg" alt="Texto alternativo de la imagen" style="width:100px; margin-left:20px;"></p>
-</div>
 <p>El contenido de esta clase se basara mayoritariamente en el libro <code>Community Ecology Analytical Methods Using R and Excel</code> by <code>Mark Gardener</code></p>
 <p>Los índices de diversidad biológica son medidas cuantitativas que se utilizan para evaluar la diversidad de especies en un área determinada. Estos índices se utilizan comúnmente en la ecología y la conservación para medir la riqueza de especies, la evenness (equidad) de la distribución de especies y la distancia entre especies. Algunos ejemplos comunes de índices de diversidad biológica incluyen:</p>
 <ul>
@@ -112,7 +106,7 @@ Clase 2: Analisis de Diversidad
 <li><p>Índice de Jaccard: mide la similitud entre dos conjuntos de especies y se basa en la proporción de especies comunes entre los conjuntos.</p></li>
 </ul>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Diversidad: Riqueza de especies.</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Comparando riqueza de especies</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Riqueza de especie y esfuerzo de muestreo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Estimando la riqueza de especie total</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Indices de diversidad</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Diversidad: Riqueza de especies.</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Comparando riqueza de especies</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Riqueza de especie y esfuerzo de muestreo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Grafico de caja</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Estimando la riqueza de especie total</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false" href="">Indices de diversidad</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <p>Riqueza de especie se refiere simplemente al numero de especies que hay en un area determinada. Para estimar la riqueza de especie solo requiere tener una lista de las especies observadas.</p>
@@ -147,6 +141,9 @@ Clase 2: Analisis de Diversidad
 <pre><code>Loading required package: lattice</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lattice' was built under R version 4.3.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
 <pre><code>This is vegan 2.6-4</code></pre>
 </div>
 </div>
@@ -154,9 +151,9 @@ Clase 2: Analisis de Diversidad
 <li>Utilizaremos el comando specnumber para estimar la riqueza de especie por unidad de muestreo</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Riqueza <span class="ot">&lt;-</span> <span class="fu">specnumber</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>])</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Riqueza)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Riqueza <span class="ot">&lt;-</span> <span class="fu">specnumber</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>])</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Riqueza)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  9  8  7  6 11  8</code></pre>
 </div>
@@ -167,9 +164,9 @@ Clase 2: Analisis de Diversidad
 <li>Ahora Utilizaremos el comando specnumber condicionada por la variable <code>basin</code>.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>RiquezaBasin <span class="ot">&lt;-</span> <span class="fu">specnumber</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], bird<span class="sc">$</span>basin)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>RiquezaBasin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>RiquezaBasin <span class="ot">&lt;-</span> <span class="fu">specnumber</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], bird<span class="sc">$</span>basin)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>RiquezaBasin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> D  L  N 
 65 68 65 </code></pre>
@@ -196,18 +193,18 @@ Clase 2: Analisis de Diversidad
 <p>Observe que ahora tenemos varios valores de riqueza por basin.</p>
 <p>para realizar la grafica de caja utilizaremos el comando <code>boxplot()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(Riqueza <span class="sc">~</span> Basin, <span class="at">data=</span> Basin,</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Riqueza de especie por basin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(Riqueza <span class="sc">~</span> Basin, <span class="at">data=</span> Basin,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Riqueza de especie por basin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="Clase2_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Que podemos concluir con este grafico de caja?</p>
-<p><strong>Riqueza de especie por basin (numerico) </strong></p>
+<p><strong>Riqueza de especie por basin (numerico)</strong></p>
 <p>Como la grafica de caja no muestra una diferencia marcada, vamos a intentar ser un poco mas descriptivos utilizando valores de tendencia central y dispersion.</p>
 <p>Comenzemos estimando la media de la riqueza de especie por basin</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(Basin<span class="sc">$</span>Riqueza, Basin<span class="sc">$</span>Basin, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(Basin<span class="sc">$</span>Riqueza, Basin<span class="sc">$</span>Basin, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        D         L         N 
  9.280702  9.710983 10.243017 </code></pre>
@@ -215,7 +212,7 @@ Clase 2: Analisis de Diversidad
 </div>
 <p>Al parecer el basin N presenta una media ligeramente mayor que basin D y L, pero tenemos que revisar el error estandard. Para esto utilizaremos el paquete <code>FSA</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FSA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FSA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'FSA' was built under R version 4.3.3</code></pre>
 </div>
@@ -223,13 +220,13 @@ Clase 2: Analisis de Diversidad
 <pre><code>## FSA v0.9.5. See citation('FSA') if used in publication.
 ## Run fishR() for related website and fishR('IFAR') for related book.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>BasinRiqueza <span class="ot">&lt;-</span> <span class="fu">Summarize</span>(Riqueza <span class="sc">~</span> Basin, <span class="at">data =</span> Basin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>BasinRiqueza <span class="ot">&lt;-</span> <span class="fu">Summarize</span>(Riqueza <span class="sc">~</span> Basin, <span class="at">data =</span> Basin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Como se puede observar obtenimos una tabla con la cantidad de muestras (n) y desviacion standart (sd), esto nos permitira estimar el error estandar y los intervalos de confianza.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>BasinRiqueza<span class="sc">$</span>ES <span class="ot">&lt;-</span> BasinRiqueza<span class="sc">$</span>sd <span class="sc">/</span> <span class="fu">sqrt</span>(BasinRiqueza<span class="sc">$</span>n)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>BasinRiqueza<span class="sc">$</span>IC95 <span class="ot">&lt;-</span> <span class="fl">1.96</span> <span class="sc">*</span> BasinRiqueza<span class="sc">$</span>sd <span class="sc">/</span> <span class="fu">sqrt</span>(BasinRiqueza<span class="sc">$</span>n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>BasinRiqueza<span class="sc">$</span>ES <span class="ot">&lt;-</span> BasinRiqueza<span class="sc">$</span>sd <span class="sc">/</span> <span class="fu">sqrt</span>(BasinRiqueza<span class="sc">$</span>n)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>BasinRiqueza<span class="sc">$</span>IC95 <span class="ot">&lt;-</span> <span class="fl">1.96</span> <span class="sc">*</span> BasinRiqueza<span class="sc">$</span>sd <span class="sc">/</span> <span class="fu">sqrt</span>(BasinRiqueza<span class="sc">$</span>n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -308,16 +305,16 @@ Clase 2: Analisis de Diversidad
 </div>
 <p>Ahora que tenemos la media e intervalos de confianza podemos generar un grafico de caja modificado, utilizando el paquete <code>ggplot2</code></p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> BasinRiqueza, <span class="fu">aes</span>(<span class="at">x =</span> Basin, <span class="at">y=</span> mean)) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean <span class="sc">-</span> IC95,</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean <span class="sc">+</span> IC95)) <span class="sc">+</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Riqueza de especie por basin"</span>,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Intervalos de confianza al 95%"</span>,</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Riqueza"</span>)<span class="sc">+</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> BasinRiqueza, <span class="fu">aes</span>(<span class="at">x =</span> Basin, <span class="at">y=</span> mean)) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean <span class="sc">-</span> IC95,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean <span class="sc">+</span> IC95)) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Riqueza de especie por basin"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Intervalos de confianza al 95%"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Riqueza"</span>)<span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -336,20 +333,20 @@ Clase 2: Analisis de Diversidad
 <p><strong>Curva de acumulacion de especie</strong></p>
 <p>Para realizar la curva de acumulacion de especie necesitamos utilizar el comando <code>specaccum()</code> del paquete <code>vegan</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Riqueza <span class="ot">&lt;-</span> <span class="fu">specaccum</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">method =</span> <span class="st">"exact"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Riqueza <span class="ot">&lt;-</span> <span class="fu">specaccum</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">method =</span> <span class="st">"exact"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Para visualizar la curva de acumulacion de especies nececitaremos utilizar el comando <code>plo()</code></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Riqueza, </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">ci.type =</span> <span class="st">"poly"</span>,</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ci.col =</span> <span class="st">"gray"</span>,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ci.lty =</span> <span class="dv">0</span>,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span> <span class="st">"black"</span>,</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Curva de acumulacion de especies"</span>,</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Riqueza"</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span> <span class="st">"Esfuerzo de muestreo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Riqueza, </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">ci.type =</span> <span class="st">"poly"</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">ci.col =</span> <span class="st">"gray"</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ci.lty =</span> <span class="dv">0</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span> <span class="st">"black"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Curva de acumulacion de especies"</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Riqueza"</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span> <span class="st">"Esfuerzo de muestreo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -364,7 +361,7 @@ Clase 2: Analisis de Diversidad
 <li>Primero separar nuestra tabla <code>bird</code> por catergoria de <code>basin</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(bird<span class="sc">$</span>basin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(bird<span class="sc">$</span>basin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   D   L   N 
@@ -373,62 +370,62 @@ Clase 2: Analisis de Diversidad
 </div>
 <p>Observe que tenemos tres categorias D, L y N</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">subset</span>(bird, basin <span class="sc">==</span> <span class="st">"D"</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="fu">subset</span>(bird, basin <span class="sc">==</span> <span class="st">"L"</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">subset</span>(bird, basin <span class="sc">==</span> <span class="st">"N"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">subset</span>(bird, basin <span class="sc">==</span> <span class="st">"D"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="fu">subset</span>(bird, basin <span class="sc">==</span> <span class="st">"L"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">subset</span>(bird, basin <span class="sc">==</span> <span class="st">"N"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Ahora estimamos la curva de acumulacion de especie por basin</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>rar_D <span class="ot">&lt;-</span> <span class="fu">specaccum</span>(D[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">method =</span> <span class="st">"exact"</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>rar_L <span class="ot">&lt;-</span> <span class="fu">specaccum</span>(L[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">method =</span> <span class="st">"exact"</span>)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>rar_N <span class="ot">&lt;-</span> <span class="fu">specaccum</span>(N[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">method =</span> <span class="st">"exact"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>rar_D <span class="ot">&lt;-</span> <span class="fu">specaccum</span>(D[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">method =</span> <span class="st">"exact"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>rar_L <span class="ot">&lt;-</span> <span class="fu">specaccum</span>(L[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">method =</span> <span class="st">"exact"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>rar_N <span class="ot">&lt;-</span> <span class="fu">specaccum</span>(N[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">method =</span> <span class="st">"exact"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Creamos un data frame para cada una de las categorias de basin</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>D_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Basin =</span> <span class="st">"D"</span>,</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Riqueza =</span> rar_D<span class="sc">$</span>richness,</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">DS =</span> rar_D<span class="sc">$</span>sd,</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Esfuerzo =</span> rar_D<span class="sc">$</span>sites)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>L_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Basin =</span> <span class="st">"L"</span>,</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Riqueza =</span> rar_L<span class="sc">$</span>richness,</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">DS =</span> rar_L<span class="sc">$</span>sd,</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Esfuerzo =</span> rar_L<span class="sc">$</span>sites)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>N_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Basin =</span> <span class="st">"N"</span>,</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Riqueza =</span> rar_N<span class="sc">$</span>richness,</span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">DS =</span> rar_N<span class="sc">$</span>sd,</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Esfuerzo =</span> rar_N<span class="sc">$</span>sites)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>D_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Basin =</span> <span class="st">"D"</span>,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Riqueza =</span> rar_D<span class="sc">$</span>richness,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">DS =</span> rar_D<span class="sc">$</span>sd,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Esfuerzo =</span> rar_D<span class="sc">$</span>sites)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>L_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Basin =</span> <span class="st">"L"</span>,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Riqueza =</span> rar_L<span class="sc">$</span>richness,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">DS =</span> rar_L<span class="sc">$</span>sd,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Esfuerzo =</span> rar_L<span class="sc">$</span>sites)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>N_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Basin =</span> <span class="st">"N"</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Riqueza =</span> rar_N<span class="sc">$</span>richness,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">DS =</span> rar_N<span class="sc">$</span>sd,</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">Esfuerzo =</span> rar_N<span class="sc">$</span>sites)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Ahora combinamos nuestras tablas</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>Basin_df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(D_df, L_df, N_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Basin_df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(D_df, L_df, N_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Necesitamos estimar los intervalos de confinza al 95%</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Basin_df<span class="sc">$</span>IC95 <span class="ot">&lt;-</span> <span class="fl">1.96</span> <span class="sc">*</span> Basin_df<span class="sc">$</span>DS <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Basin_df<span class="sc">$</span>IC95 <span class="ot">&lt;-</span> <span class="fl">1.96</span> <span class="sc">*</span> Basin_df<span class="sc">$</span>DS <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Por ultimo realizamos nuetro grafico con ggplot</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> Basin_df, <span class="fu">aes</span>(<span class="at">x=</span> Esfuerzo, <span class="at">y=</span> Riqueza, <span class="at">fill =</span> Basin))<span class="sc">+</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Riqueza <span class="sc">-</span> IC95,</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax =</span> Riqueza <span class="sc">+</span> IC95),</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Curva de acumulacion de especie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> Basin_df, <span class="fu">aes</span>(<span class="at">x=</span> Esfuerzo, <span class="at">y=</span> Riqueza, <span class="at">fill =</span> Basin))<span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Riqueza <span class="sc">-</span> IC95,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax =</span> Riqueza <span class="sc">+</span> IC95),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Curva de acumulacion de especie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -436,11 +433,31 @@ Clase 2: Analisis de Diversidad
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"CAE.png"</span>, <span class="at">plot =</span> <span class="fu">last_plot</span>(), <span class="at">units =</span> <span class="st">"cm"</span>, <span class="at">width =</span> <span class="dv">15</span>, <span class="at">height =</span> <span class="dv">8</span>, <span class="at">dpi =</span> <span class="dv">350</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Que podemos concluir con este grafico?</p>
 </div>
 <div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<p>Creamos una data frame con los valores de riqueza al muestreo 300</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Riqueza_df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(D_df[<span class="dv">330</span>,], </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                    N_df[<span class="dv">330</span>,],</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                    L_df[<span class="dv">330</span>,])</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>Riqueza_df<span class="sc">$</span>IC <span class="ot">&lt;-</span> <span class="fl">1.96</span> <span class="sc">*</span> Riqueza_df<span class="sc">$</span>DS<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ahora graficamos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Riqueza_df, <span class="fu">aes</span>(Basin, Riqueza))<span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span> <span class="dv">4</span>, <span class="at">shape=</span><span class="dv">15</span>)<span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span> Riqueza <span class="sc">-</span> IC,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> Riqueza <span class="sc">+</span> IC))<span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Clase2_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
 <p>Generalmente cuando realizamos muestreos no registramos algunas especies, en especial las especies raras. Hay varias tecnicas para estimar la riqueza de especie total en un sitio, estos metodos se pueden dividir en dos:</p>
 <ul>
 <li><p>Estimaciones basadas en incidencia: <em>Este metodo utiliza la frecuencia de especies por sitios</em></p></li>
@@ -450,7 +467,7 @@ Clase 2: Analisis de Diversidad
 <p>Son utiles cuando se tienen datos de presencia-ausencia, y tambien se pueden utilizar cuando tenemos abundancias.</p>
 <p>Pueden ser calculados utilizando el comando <code>specpool()</code> del paquete <code>vegan</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Riqueza_incidencia <span class="ot">&lt;-</span> <span class="fu">specpool</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">pool =</span> bird<span class="sc">$</span>basin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Riqueza_incidencia <span class="ot">&lt;-</span> <span class="fu">specpool</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">pool =</span> bird<span class="sc">$</span>basin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -524,16 +541,16 @@ Clase 2: Analisis de Diversidad
 </div>
 <p>Haremos un grafico rapido</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">poolaccum</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">poolaccum</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Clase2_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+<p><img src="Clase2_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p><strong>Estimaciones basadas en abundancia</strong></p>
 <p>Cuando se tienen datos de abundancia se pueden utilizar diferenctes tecnicas y estimadores para la riqueza de especies total para cada sitio.</p>
 <p>Pueden ser calculados utilizando el comando <code>estimateR</code> del paquete <code>vegan</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Riqueza_abundancia <span class="ot">&lt;-</span> <span class="fu">estimateR</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>Riqueza_abundancia <span class="ot">&lt;-</span> <span class="fu">estimateR</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in sqrt(sum(Deriv.Ch1 %*% t(Deriv.Ch1) * (diag(a) - a %*%
 t(a)/S.ACE))): NaNs produced
@@ -541,7 +558,7 @@ t(a)/S.ACE))): NaNs produced
 Warning in sqrt(sum(Deriv.Ch1 %*% t(Deriv.Ch1) * (diag(a) - a %*%
 t(a)/S.ACE))): NaNs produced</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>Riqueza_abundancia <span class="ot">&lt;-</span> data.frame <span class="ot">&lt;-</span> <span class="fu">t</span>(Riqueza_abundancia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>Riqueza_abundancia <span class="ot">&lt;-</span> data.frame <span class="ot">&lt;-</span> <span class="fu">t</span>(Riqueza_abundancia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -603,7 +620,7 @@ t(a)/S.ACE))): NaNs produced</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
 <p>Índice de Shannon: mide la diversidad de especies en un área y también tiene en cuenta la evenness de la distribución de especies.</p>
 <p>Índice de Simpson: mide la diversidad de especies en un área y también tiene en cuenta la riqueza de especies.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -623,9 +640,9 @@ t(a)/S.ACE))): NaNs produced</code></pre>
 <p>El índice de diversidad de Simpson es una medida relativa y su valor puede variar entre 0 y 1, donde un valor más cercano a 1 indica una mayor diversidad de especies y una mayor igualdad en la distribución de las poblaciones de especies. El índice de diversidad de Simpson se utiliza comúnmente en la ecología y la conservación de la biodiversidad para evaluar la riqueza de especies y la estabilidad de los ecosistemas.</p>
 <p>para estimar el indice de simpson podemos utilizar el comando <code>diversity()</code> del paquete <code>vegan</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>Diversidad_simpson <span class="ot">&lt;-</span> <span class="fu">diversity</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">index =</span> <span class="st">"simpson"</span>)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Diversidad_simpson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Diversidad_simpson <span class="ot">&lt;-</span> <span class="fu">diversity</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">index =</span> <span class="st">"simpson"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Diversidad_simpson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8757396 0.8595041 0.8437500 0.7600000 0.8979592 0.8600000</code></pre>
 </div>
@@ -645,9 +662,9 @@ t(a)/S.ACE))): NaNs produced</code></pre>
 <p>El índice de Shannon es una medida relativa y su valor puede variar entre 0 y ln(S), donde S es el número de especies presentes en la muestra. Un valor más alto del índice de Shannon indica una mayor diversidad de especies y una mayor igualdad en la distribución de las poblaciones de especies. El índice de Shannon se utiliza comúnmente en la ecología y la conservación de la biodiversidad para evaluar la riqueza de especies y la estabilidad de los ecosistemas.</p>
 <p>para estimar el indice de simpson podemos utilizar el comando <code>diversity()</code> del paquete <code>vegan</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Diversidad_shannon <span class="ot">&lt;-</span> <span class="fu">diversity</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">index =</span> <span class="st">"shannon"</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Diversidad_shannon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Diversidad_shannon <span class="ot">&lt;-</span> <span class="fu">diversity</span>(bird[,<span class="dv">4</span><span class="sc">:</span><span class="dv">81</span>], <span class="at">index =</span> <span class="st">"shannon"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Diversidad_shannon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.138397 2.019815 1.906155 1.609438 2.341994 2.025326</code></pre>
 </div>

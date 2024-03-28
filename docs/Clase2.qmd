@@ -1,45 +1,35 @@
 ---
-title: "Clase 2"
+title: "Clase 2: Analisis de Diversidad"
 format: html
 editor: visual
 ---
-
-
-<div style="display:flex; align-items:center;">
-  <h1 style="margin:0;">Clase 2: Analisis de Diversidad</h1>
-  <img src="imagenes/HNBI_LOGO2.jpg" alt="Texto alternativo de la imagen" style="width:100px; margin-left:20px;">
-</div>
-
 
 El contenido de esta clase se basara mayoritariamente en el libro `Community Ecology Analytical Methods Using R and Excel` by `Mark Gardener`
 
 Los índices de diversidad biológica son medidas cuantitativas que se utilizan para evaluar la diversidad de especies en un área determinada. Estos índices se utilizan comúnmente en la ecología y la conservación para medir la riqueza de especies, la evenness (equidad) de la distribución de especies y la distancia entre especies. Algunos ejemplos comunes de índices de diversidad biológica incluyen:
 
-- Índice de Shannon: mide la diversidad de especies en un área y también tiene en cuenta la evenness de la distribución de especies.
+-   Índice de Shannon: mide la diversidad de especies en un área y también tiene en cuenta la evenness de la distribución de especies.
 
-- Índice de Simpson: mide la diversidad de especies en un área y también tiene en cuenta la riqueza de especies.
+-   Índice de Simpson: mide la diversidad de especies en un área y también tiene en cuenta la riqueza de especies.
 
-- Índice de Berger-Parker: mide la diversidad de especies en un área y se basa en la riqueza de especies y en la proporción de individuos de la especie más abundante.
+-   Índice de Berger-Parker: mide la diversidad de especies en un área y se basa en la riqueza de especies y en la proporción de individuos de la especie más abundante.
 
-- Índice de Margalef: mide la diversidad de especies en un área y se basa en la riqueza de especies y en la diferencia entre la riqueza de especies y el número de especies comunes.
+-   Índice de Margalef: mide la diversidad de especies en un área y se basa en la riqueza de especies y en la diferencia entre la riqueza de especies y el número de especies comunes.
 
-- Índice de Jaccard: mide la similitud entre dos conjuntos de especies y se basa en la proporción de especies comunes entre los conjuntos.
+-   Índice de Jaccard: mide la similitud entre dos conjuntos de especies y se basa en la proporción de especies comunes entre los conjuntos.
 
 ::: panel-tabset
-
 ## Diversidad: Riqueza de especies.
 
 Riqueza de especie se refiere simplemente al numero de especies que hay en un area determinada. Para estimar la riqueza de especie solo requiere tener una lista de las especies observadas.
 
 La riqueza de especies puede ser usada coma variable respuesta (dependiente) en varios analisis, sin embargo, para realizarlo hay que asegurarse que el esfuerzo de muestreo es el mismo para todas las replicas. Una vez hemos tomado en cuenta el `problema` de esfuerzo de muestreo, hay dos formas de analisar la riqueza de especies.
 
-- Comparar differencias en la riqueza de especie con alguna variable (categorica)
+-   Comparar differencias en la riqueza de especie con alguna variable (categorica)
 
-- Correlacionar la riqueza de especie con alguna variable (numerica)
-
+-   Correlacionar la riqueza de especie con alguna variable (numerica)
 
 Primero vamos a cargar la base de datos `bird.sta.csv` para estimar la riqueza de especie por sitio de estudio.
-
 
 ```{r, eval=FALSE}
 
@@ -55,25 +45,23 @@ bird <- read.csv("data/bird.sta.csv")
 
 ```
 
-
-
 **Estimar la riqueza de especie por cada unidad de muestreo**
 
 > En nuestra base de datos `bird` cada fila corresponde a un esfuerzo de muestreo. Para poder estimar la riqueza de especie utilizaremos el paquete `vegan`.
 
-- Instalar paquete `vegan`
+-   Instalar paquete `vegan`
 
 ```{r, eval=FALSE}
 install.packages("vegan")
 ```
 
-- Cargar el paquete `vegan`
+-   Cargar el paquete `vegan`
 
 ```{r}
 library(vegan)
 ```
 
--  Utilizaremos el comando specnumber para estimar la riqueza de especie por unidad de muestreo
+-   Utilizaremos el comando specnumber para estimar la riqueza de especie por unidad de muestreo
 
 ```{r}
 Riqueza <- specnumber(bird[,4:81])
@@ -83,12 +71,9 @@ head(Riqueza)
 
 Observe que hemos creado la variable `Riqueza` la cual contiene la riqueza de especie para cada una de las filas de nuestra base de datos `bird`. El comando `head()` nos permite visualizar las primeras 6 observaciones.
 
-
-
 **Estimar la riqueza de especie por la variable basin**
 
-
-- Ahora Utilizaremos el comando specnumber condicionada por la variable `basin`.
+-   Ahora Utilizaremos el comando specnumber condicionada por la variable `basin`.
 
 ```{r}
 RiquezaBasin <- specnumber(bird[,4:81], bird$basin)
@@ -97,7 +82,7 @@ RiquezaBasin
 
 ```
 
-Como se puede observar tenemos obtenemos tres numeros (65, 68, 65 ), estos hace referencia a la riqueza de especie para basin D, L y N respectivamente.  
+Como se puede observar tenemos obtenemos tres numeros (65, 68, 65 ), estos hace referencia a la riqueza de especie para basin D, L y N respectivamente.
 
 ## Comparando riqueza de especies
 
@@ -105,10 +90,7 @@ Una simple comparacion de espcies solamente es posible cuando hay equivalencia e
 
 Un unico valor de riqueza de especie no es suficiente para una comparacion, por lo que tendremos que recurir a tecnicas estadisticas para saber si en realidad la riqueza de especie entre basin difiere.
 
-
-
 **Riqueza de especie por basin (visual )**
-
 
 Comencemos con una comparacion visual utilizando un grafico de caja
 
@@ -133,10 +115,9 @@ boxplot(Riqueza ~ Basin, data= Basin,
         main = "Riqueza de especie por basin")
 ```
 
-
 Que podemos concluir con este grafico de caja?
 
-**Riqueza de especie por basin (numerico) **
+**Riqueza de especie por basin (numerico)**
 
 Como la grafica de caja no muestra una diferencia marcada, vamos a intentar ser un poco mas descriptivos utilizando valores de tendencia central y dispersion.
 
@@ -145,6 +126,7 @@ Comenzemos estimando la media de la riqueza de especie por basin
 ```{r}
 tapply(Basin$Riqueza, Basin$Basin, mean)
 ```
+
 Al parecer el basin N presenta una media ligeramente mayor que basin D y L, pero tenemos que revisar el error estandard. Para esto utilizaremos el paquete `FSA`
 
 ```{r}
@@ -168,7 +150,6 @@ BasinRiqueza$IC95 <- 1.96 * BasinRiqueza$sd / sqrt(BasinRiqueza$n)
 kable(BasinRiqueza)
 
 ```
-
 
 Ahora que tenemos la media e intervalos de confianza podemos generar un grafico de caja modificado, utilizando el paquete `ggplot2`
 
@@ -199,7 +180,6 @@ Por ahora hemos realizado algunos analisis sin tomar en cuenta la cantidad de mu
 
 *La curva de acumulación de especies puede ser útil para comparar la biodiversidad de diferentes áreas y para entender cómo la diversidad de especies afecta a la estabilidad y el funcionamiento de los ecosistemas. También puede ser utilizada para predecir el número total de especies en un área determinada y para identificar áreas con alta biodiversidad que pueden ser prioritarias para la conservación.*
 
-
 **Curva de acumulacion de especie**
 
 Para realizar la curva de acumulacion de especie necesitamos utilizar el comando `specaccum()` del paquete `vegan`
@@ -208,7 +188,7 @@ Para realizar la curva de acumulacion de especie necesitamos utilizar el comando
 Riqueza <- specaccum(bird[,4:81], method = "exact")
 ```
 
-- Para visualizar la curva de acumulacion de especies nececitaremos utilizar el comando `plo()`
+-   Para visualizar la curva de acumulacion de especies nececitaremos utilizar el comando `plo()`
 
 ```{r, fig.align='center'}
 plot(Riqueza, 
@@ -221,12 +201,11 @@ plot(Riqueza,
      xlab= "Esfuerzo de muestreo")
 ```
 
-
 **Comparacion de riqueza con curva de acumulacion de especie**
 
 Para realizar una comparacion de riqueza con una curva de acumulacion de especies, necesitaremos realizar algunas pasos extras
 
-- Primero separar nuestra tabla `bird` por catergoria de `basin`
+-   Primero separar nuestra tabla `bird` por catergoria de `basin`
 
 ```{r}
 table(bird$basin)
@@ -240,7 +219,7 @@ L <- subset(bird, basin == "L")
 N <- subset(bird, basin == "N")
 ```
 
-- Ahora estimamos la curva de acumulacion de especie por basin
+-   Ahora estimamos la curva de acumulacion de especie por basin
 
 ```{r}
 rar_D <- specaccum(D[,4:81], method = "exact")
@@ -251,7 +230,7 @@ rar_N <- specaccum(N[,4:81], method = "exact")
 
 ```
 
-- Creamos un data frame para cada una de las categorias de basin
+-   Creamos un data frame para cada una de las categorias de basin
 
 ```{r}
 D_df <- data.frame(Basin = "D",
@@ -270,21 +249,19 @@ N_df <- data.frame(Basin = "N",
                    Esfuerzo = rar_N$sites)
 ```
 
-
-- Ahora combinamos nuestras tablas
-
+-   Ahora combinamos nuestras tablas
 
 ```{r}
 Basin_df <- rbind(D_df, L_df, N_df)
 ```
 
-- Necesitamos estimar los intervalos de confinza al 95%
+-   Necesitamos estimar los intervalos de confinza al 95%
 
 ```{r}
 Basin_df$IC95 <- 1.96 * Basin_df$DS / sqrt(1)
 ```
 
-- Por ultimo realizamos nuetro grafico con ggplot
+-   Por ultimo realizamos nuetro grafico con ggplot
 
 ```{r, fig.align='center'}
 
@@ -296,19 +273,43 @@ ggplot(data= Basin_df, aes(x= Esfuerzo, y= Riqueza, fill = Basin))+
   theme_classic() +
   labs(title = "Curva de acumulacion de especie")
 
-ggsave("CAE.png", plot = last_plot(), units = "cm", width = 15, height = 8, dpi = 350)
+
 ```
 
 Que podemos concluir con este grafico?
+
+## Grafico de caja
+
+Creamos una data frame con los valores de riqueza al muestreo 300
+
+```{r}
+
+Riqueza_df <- rbind(D_df[330,], 
+                    N_df[330,],
+                    L_df[330,])
+
+Riqueza_df$IC <- 1.96 * Riqueza_df$DS/sqrt(1)
+```
+
+Ahora graficamos
+
+```{r}
+ggplot(Riqueza_df, aes(Basin, Riqueza))+
+  geom_point(size= 4, shape=15)+
+  geom_errorbar(aes(ymin= Riqueza - IC,
+                    ymax = Riqueza + IC))+
+  theme_classic()
+```
+
 
 
 ## Estimando la riqueza de especie total
 
 Generalmente cuando realizamos muestreos no registramos algunas especies, en especial las especies raras. Hay varias tecnicas para estimar la riqueza de especie total en un sitio, estos metodos se pueden dividir en dos:
 
-- Estimaciones basadas en incidencia: *Este metodo utiliza la frecuencia de especies por sitios*
+-   Estimaciones basadas en incidencia: *Este metodo utiliza la frecuencia de especies por sitios*
 
-- Estimaciones basadas en abundancia: *Este metodo utilizada el conteo de especies en un sitio dado*
+-   Estimaciones basadas en abundancia: *Este metodo utilizada el conteo de especies en un sitio dado*
 
 **Estimaciones basadas en incidencia**
 
@@ -316,17 +317,14 @@ Son utiles cuando se tienen datos de presencia-ausencia, y tambien se pueden uti
 
 Pueden ser calculados utilizando el comando `specpool()` del paquete `vegan`
 
-
 ```{r}
 Riqueza_incidencia <- specpool(bird[,4:81], pool = bird$basin)
 
 ```
 
-
 ```{r, echo=FALSE}
 kable(Riqueza_incidencia)
 ```
-
 
 Haremos un grafico rapido
 
@@ -351,7 +349,6 @@ Riqueza_abundancia <- data.frame <- t(Riqueza_abundancia)
 kable(head(Riqueza_abundancia))
 ```
 
-
 ## Indices de diversidad
 
 Índice de Shannon: mide la diversidad de especies en un área y también tiene en cuenta la evenness de la distribución de especies.
@@ -359,7 +356,6 @@ kable(head(Riqueza_abundancia))
 Índice de Simpson: mide la diversidad de especies en un área y también tiene en cuenta la riqueza de especies.
 
 ::: panel-tabset
-
 ### Indice de Simpson
 
 El índice de diversidad de Simpson es una medida de la diversidad de especies en una comunidad o en un área determinada. Se utiliza para evaluar la riqueza de especies y la evenness (igualdad) en la distribución de las poblaciones de especies en un área determinada.
@@ -370,15 +366,14 @@ $D = 1 / Σ(n / N)^2$
 
 Donde:
 
-- D es el índice de diversidad de Simpson
-- n es el número de individuos de cada especie en la muestra
-- N es el número total de individuos en la muestra
-- Σ es la sumatoria de todas las especies presentes en la muestra
+-   D es el índice de diversidad de Simpson
+-   n es el número de individuos de cada especie en la muestra
+-   N es el número total de individuos en la muestra
+-   Σ es la sumatoria de todas las especies presentes en la muestra
 
 El índice de diversidad de Simpson es una medida relativa y su valor puede variar entre 0 y 1, donde un valor más cercano a 1 indica una mayor diversidad de especies y una mayor igualdad en la distribución de las poblaciones de especies. El índice de diversidad de Simpson se utiliza comúnmente en la ecología y la conservación de la biodiversidad para evaluar la riqueza de especies y la estabilidad de los ecosistemas.
 
 para estimar el indice de simpson podemos utilizar el comando `diversity()` del paquete `vegan`
-
 
 ```{r}
 Diversidad_simpson <- diversity(bird[,4:81], index = "simpson")
@@ -396,24 +391,21 @@ $H = -Σ(n / N) * ln(n / N)$
 
 Donde:
 
-- H es el índice de Shannon
-- n es el número de individuos de cada especie en la muestra
-- N es el número total de individuos en la muestra
-- Σ es la sumatoria de todas las especies presentes en la muestra
+-   H es el índice de Shannon
+-   n es el número de individuos de cada especie en la muestra
+-   N es el número total de individuos en la muestra
+-   Σ es la sumatoria de todas las especies presentes en la muestra
 
 El índice de Shannon es una medida relativa y su valor puede variar entre 0 y ln(S), donde S es el número de especies presentes en la muestra. Un valor más alto del índice de Shannon indica una mayor diversidad de especies y una mayor igualdad en la distribución de las poblaciones de especies. El índice de Shannon se utiliza comúnmente en la ecología y la conservación de la biodiversidad para evaluar la riqueza de especies y la estabilidad de los ecosistemas.
 
 para estimar el indice de simpson podemos utilizar el comando `diversity()` del paquete `vegan`
-
 
 ```{r}
 Diversidad_shannon <- diversity(bird[,4:81], index = "shannon")
 
 head(Diversidad_shannon)
 ```
-
 :::
-
 :::
 
 ![HN Biology Investigation Academy](HN%20Cursos%20publicidad/HN%20Biology%20Inv%20large.jpg)
